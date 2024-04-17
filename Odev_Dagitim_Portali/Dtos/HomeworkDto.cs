@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Odev_Dagitim_Portali.Dtos
 {
-    public class HomerworkDto
+    public class HomeworkDto
     {
         public int Submission_id { get; set; }
 

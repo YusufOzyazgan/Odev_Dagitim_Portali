@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Odev_Dagitim_Portali.Models;
 
@@ -11,9 +12,11 @@ using Odev_Dagitim_Portali.Models;
 namespace Odev_Dagitim_Portali.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240417173701_mig2")]
+    partial class mig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +222,8 @@ namespace Odev_Dagitim_Portali.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Department_id");
+                    b.HasIndex("Department_id")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -374,7 +378,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -383,16 +387,16 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.AppUser", b =>
                 {
                     b.HasOne("Odev_Dagitim_Portali.Models.University_department", "University_departments")
-                        .WithMany("AppUsers")
-                        .HasForeignKey("Department_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("AppUsers")
+                        .HasForeignKey("Odev_Dagitim_Portali.Models.AppUser", "Department_id")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("University_departments");
@@ -409,7 +413,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.AppUser", "AppUsers")
                         .WithOne("Homeworks")
                         .HasForeignKey("Odev_Dagitim_Portali.Models.Homework", "User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUsers");
@@ -422,13 +426,13 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.Homework", "Homeworks")
                         .WithMany("Homework_submissions")
                         .HasForeignKey("Homework_id")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Odev_Dagitim_Portali.Models.AppUser", "AppUsers")
                         .WithOne("Homework_submissions")
                         .HasForeignKey("Odev_Dagitim_Portali.Models.Homework_submission", "User_id")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUsers");
@@ -468,7 +472,8 @@ namespace Odev_Dagitim_Portali.Migrations
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.University_department", b =>
                 {
-                    b.Navigation("AppUsers");
+                    b.Navigation("AppUsers")
+                        .IsRequired();
 
                     b.Navigation("Lessons");
                 });

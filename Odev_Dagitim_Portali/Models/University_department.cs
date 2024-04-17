@@ -7,9 +7,9 @@ namespace Odev_Dagitim_Portali.Models
         [Key]
         public int Department_id { get; set; }  
 
-        public string Department_name { get;}
+        public string Department_name { get; set; }
         public List<Lesson> Lessons { get; set; }
         
-        public AppUser AppUsers { get; set; }    
+        public List<AppUser> AppUsers { get; set; }    
     }
 }
