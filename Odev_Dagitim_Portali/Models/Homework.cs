@@ -8,12 +8,11 @@ namespace Odev_Dagitim_Portali.Models
         [Key]
         public int Homework_id {  get; set; }
 
-
-
         public string Homework_title { get; set; }
         public string Homework_content { get; set; }
 
-
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
         public DateTime Homework_deadline { get; set; }
 
         [ForeignKey("Lessons")]

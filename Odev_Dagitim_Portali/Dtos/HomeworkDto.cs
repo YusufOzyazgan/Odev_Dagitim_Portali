@@ -5,14 +5,19 @@ namespace Odev_Dagitim_Portali.Dtos
 {
     public class HomeworkDto
     {
-        public int Submission_id { get; set; }
-
-        public string File_name { get; set; }
- 
         public int Homework_id { get; set; }
 
-        public string User_id { get; set; }
+        public string Homework_title { get; set; }
+        public string Homework_content { get; set; }
 
-       
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
+        public DateTime Homework_deadline { get; set; }
+
+        public int Lesson_id { get; set; }
+
+        //public string User_id { get; set; } controllersta kayıtlı kullanıcı idsini eklemr otomatikleştirelecek
+
+
     }
 }

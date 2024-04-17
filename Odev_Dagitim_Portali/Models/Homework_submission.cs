@@ -8,6 +8,8 @@ namespace Odev_Dagitim_Portali.Models
         [Key]
         public int Submission_id { get; set; }
         public string File_name { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
 
         [ForeignKey("Homeworks")]
         public int Homework_id {  get; set; }
