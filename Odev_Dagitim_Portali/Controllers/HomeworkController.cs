@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Odev_Dagitim_Portali.Dtos;
 using Odev_Dagitim_Portali.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Odev_Dagitim_Portali.Controllers
 {
@@ -13,11 +16,13 @@ namespace Odev_Dagitim_Portali.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
         ResultDto result = new ResultDto();
-        public HomeworkController(AppDbContext context, IMapper mapper)
+        public HomeworkController(AppDbContext context, IMapper mapper,UserManager<AppUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -45,16 +50,29 @@ namespace Odev_Dagitim_Portali.Controllers
         }
         [HttpPost]
         //[Authorize(Roles = "Admin")]
-        public ResultDto Post(HomeworkDto dto)
+        public async Task<ResultDto> Post(HomeworkDto dto)
         {
-            
-            var homework = _mapper.Map<Homework>(dto);
-            homework.Updated = DateTime.Now;
-            homework.Created = DateTime.Now;
-            _context.Homeworks.Add(homework);
-            _context.SaveChanges();
-            result.Status = true;
-            result.Message = "Kategori Eklendi";
+            //var userId = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(dto.User_name);
+
+            try
+            {
+                var homework = _mapper.Map<Homework>(dto);
+                homework.Updated = DateTime.Now;
+                homework.Created = DateTime.Now;
+                
+                homework.User_id = user.Id.ToString();
+
+                _context.Homeworks.Add(homework);
+                _context.SaveChanges();
+                result.Status = true;
+                result.Message = "Ödev Eklendi userId = "+user.Id.ToString();
+            }
+            catch (Exception ex)
+            {
+                result.Status = false;
+                result.Message = "User ID = "+user.Id + " User name = "+ dto.User_name+" " +ex;
+            }
             return result;
         }
 

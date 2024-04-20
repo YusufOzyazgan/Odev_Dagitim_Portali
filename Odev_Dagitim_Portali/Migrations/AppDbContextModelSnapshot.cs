@@ -271,7 +271,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasIndex("User_id")
                         .IsUnique();
 
-                    b.ToTable("Homeworks");
+                    b.ToTable("Homeworks", (string)null);
                 });
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.Homework_submission", b =>
@@ -306,7 +306,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasIndex("User_id")
                         .IsUnique();
 
-                    b.ToTable("Homework_submissions");
+                    b.ToTable("Homework_submissions", (string)null);
                 });
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.Lesson", b =>
@@ -328,7 +328,7 @@ namespace Odev_Dagitim_Portali.Migrations
 
                     b.HasIndex("Department_id");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.University_department", b =>
@@ -345,7 +345,7 @@ namespace Odev_Dagitim_Portali.Migrations
 
                     b.HasKey("Department_id");
 
-                    b.ToTable("University_departments");
+                    b.ToTable("University_departments", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -404,7 +404,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.University_department", "University_departments")
                         .WithMany("AppUsers")
                         .HasForeignKey("Department_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("University_departments");
@@ -415,13 +415,13 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.Lesson", "Lessons")
                         .WithMany("Homeworks")
                         .HasForeignKey("Lesson_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Odev_Dagitim_Portali.Models.AppUser", "AppUsers")
                         .WithOne("Homeworks")
                         .HasForeignKey("Odev_Dagitim_Portali.Models.Homework", "User_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AppUsers");
@@ -434,7 +434,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.Homework", "Homeworks")
                         .WithMany("Homework_submissions")
                         .HasForeignKey("Homework_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Odev_Dagitim_Portali.Models.AppUser", "AppUsers")
@@ -453,7 +453,7 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.HasOne("Odev_Dagitim_Portali.Models.University_department", "University_departments")
                         .WithMany("Lessons")
                         .HasForeignKey("Department_id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("University_departments");
