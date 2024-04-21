@@ -113,9 +113,9 @@ namespace Odev_Dagitim_Portali.Controllers
             }
 
             var token = GenerateJWT(authClaims);
-
+            
             result.Status = true;
-            result.Message = token;
+            result.Message = user.UserName.ToString()+"  "+token ;
             return result;
 
         }
