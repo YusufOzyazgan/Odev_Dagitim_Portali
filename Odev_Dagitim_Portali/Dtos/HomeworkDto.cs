@@ -16,7 +16,7 @@ namespace Odev_Dagitim_Portali.Dtos
 
         public int Lesson_id { get; set; }
 
-        public string User_name { get; set; } 
+        public string? User_id { get; set; }
 
     }
 }
