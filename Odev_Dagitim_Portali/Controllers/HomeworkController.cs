@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.SignalR;
 using Odev_Dagitim_Portali.Dtos;
 using Odev_Dagitim_Portali.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Odev_Dagitim_Portali.Controllers
 {
@@ -50,86 +49,34 @@ namespace Odev_Dagitim_Portali.Controllers
             return homework_submissionDtos;
         }
         [HttpPost]
-        [Authorize]
+        //[Authorize(Roles = "Admin")]
         public async Task<ResultDto> Post(HomeworkDto dto)
         {
-            //var userId = _userManager.GetUserId(User);
+            //var userId = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(dto.User_name);
 
-            //var user = await _userManager.FindByIdAsync(userId);
-
-
-            var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            var userID = usernameClaim.Value.ToString();
-            
-            ;
-            if (userID == null)
-            {
-                result.Status = false;
-                result.Message = "Kayıt için giriş yapmalısınız !!!";
-                return result;
-            }
             try
             {
-
                 var homework = _mapper.Map<Homework>(dto);
                 homework.Updated = DateTime.Now;
                 homework.Created = DateTime.Now;
-              
-                homework.User_id = userID;
+                
+                homework.User_id = user.Id.ToString();
 
                 _context.Homeworks.Add(homework);
                 _context.SaveChanges();
                 result.Status = true;
-                result.Message = "Ödev Eklendi.";
+                result.Message = "Ödev Eklendi userId = "+user.Id.ToString();
             }
             catch (Exception ex)
             {
                 result.Status = false;
-                result.Message = ex.Message ;
+                result.Message = "User ID = "+user.Id + " User name = "+ dto.User_name+" " +ex;
             }
             return result;
         }
 
-        [HttpPut]
-        public ResultDto Put(HomeworkDto dto)
-        {
-            var homework= _context.Homeworks.Where(s => s.Homework_id == dto.Homework_id).SingleOrDefault();
-            if (homework == null)
-            {
-                result.Status = false;
-                result.Message = "Ödev Bulunamadı!";
-                return result;
-            }
-            homework.Homework_title = dto.Homework_title;
-            homework.Homework_content = dto.Homework_content;
-            homework.Homework_deadline = dto.Homework_deadline;
-            homework.Updated = DateTime.Now;
-            homework.Lesson_id = dto.Lesson_id;
-            _context.Homeworks.Update(homework);
-            _context.SaveChanges();
-            result.Status = true;
-            result.Message = "Ödev Düzenlendi";
-            return result;
-        }
 
-
-        [HttpDelete]
-        [Route("{id}")]
-        public ResultDto Delete(int id)
-        {
-            var homework= _context.Homeworks.Where(s => s.Homework_id== id).SingleOrDefault();
-            if (homework == null)
-            {
-                result.Status = false;
-                result.Message = "Ürün Bulunamadı!";
-                return result;
-            }
-            _context.Homeworks.Remove(homework);
-            _context.SaveChanges();
-            result.Status = true;
-            result.Message = "Ürün Silindi";
-            return result;
-        }
 
 
 

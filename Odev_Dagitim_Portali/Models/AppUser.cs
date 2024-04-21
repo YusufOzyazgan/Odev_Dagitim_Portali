@@ -14,7 +14,7 @@ namespace Odev_Dagitim_Portali.Models
 
         public University_department University_departments { get; set; }
 
-        public List<Homework> Homeworks { get; set; }
+        public Homework Homeworks { get; set; }
         public Homework_submission Homework_submissions { get; set; }
     }
 }
