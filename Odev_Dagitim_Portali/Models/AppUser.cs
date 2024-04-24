@@ -12,10 +12,10 @@ namespace Odev_Dagitim_Portali.Models
         [ForeignKey("University_departments")]
         public int Department_id { get; set; }
 
-        public University_department University_departments { get; set; }
+        public List<University_department> University_departments { get; set; }
 
         public List<Homework> Homeworks { get; set; }
-        public Homework_submission Homework_submissions { get; set; }
+        public List<Homework_submission> Homework_submissions { get; set; }
     }
 }
 

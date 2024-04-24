@@ -11,6 +11,7 @@ using System.Security.Claims;
 
 namespace Odev_Dagitim_Portali.Controllers
 {
+    [Authorize] 
     [Route("api/Homeworks")]
     [ApiController]
     public class HomeworkController : ControllerBase
@@ -25,7 +26,7 @@ namespace Odev_Dagitim_Portali.Controllers
             _mapper = mapper;
             _userManager = userManager;
         }
-
+        [Authorize(Roles = "Ogretmen,Admin")]
         [HttpGet]
         public List<HomeworkDto> GetList()
         {
@@ -35,12 +36,14 @@ namespace Odev_Dagitim_Portali.Controllers
         }
         [HttpGet]
         [Route("{id}")]
+        [Authorize]
         public HomeworkDto Get(int id)
         {
             var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
             var homeworkDto = _mapper.Map<HomeworkDto>(homework);
             return homeworkDto;
         }
+        
         [HttpGet]
         [Route("{id}/Homework_submission")]
         public List<Homework_submissionDto> GetHomeworkSubmissions(int id)
@@ -50,12 +53,10 @@ namespace Odev_Dagitim_Portali.Controllers
             return homework_submissionDtos;
         }
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Ogretmen,Admin")]
         public async Task<ResultDto> Post(HomeworkDto dto)
         {
-            //var userId = _userManager.GetUserId(User);
-
-            //var user = await _userManager.FindByIdAsync(userId);
+           
 
 
             var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
@@ -91,6 +92,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Ogretmen,Admin")]
         public ResultDto Put(HomeworkDto dto)
         {
             var homework= _context.Homeworks.Where(s => s.Homework_id == dto.Homework_id).SingleOrDefault();
@@ -115,6 +117,7 @@ namespace Odev_Dagitim_Portali.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Ogretmen,Admin")]
         public ResultDto Delete(int id)
         {
             var homework= _context.Homeworks.Where(s => s.Homework_id== id).SingleOrDefault();

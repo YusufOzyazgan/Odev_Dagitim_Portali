@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Odev_Dagitim_Portali.Models;
+using Odev_Dagitim_Portali.Service;
 using System.Reflection;
 using System.Text;
+using static Odev_Dagitim_Portali.Service.ImanageImage;
 
 
 
@@ -16,6 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Directory.GetCurrentDirectory()));
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -44,7 +49,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
+builder.Services.AddTransient<IManageImage, ManageImage>();
 builder.Services.AddCors(p => p.AddPolicy("corspolicy", opt =>
 {
     opt.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();

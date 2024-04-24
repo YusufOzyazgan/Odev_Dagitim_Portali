@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ namespace Odev_Dagitim_Portali.Controllers
             _configuration = configuration;
             _signInManager = signInManager;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public List<UserDto> List()
         {
@@ -40,6 +41,7 @@ namespace Odev_Dagitim_Portali.Controllers
             var userDtos = _mapper.Map<List<UserDto>>(users);
             return userDtos;
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public UserDto GetById(string id)
         {
@@ -64,16 +66,16 @@ namespace Odev_Dagitim_Portali.Controllers
                 return result;
             }
             var user = await _userManager.FindByNameAsync(dto.UserName);
-            var roleExist = await _roleManager.RoleExistsAsync("Uye");
+            var roleExist = await _roleManager.RoleExistsAsync("Ogrenci");
             if (!roleExist)
             {
-                var role = new AppRole { Name = "Uye" };
+                var role = new AppRole { Name = "Ogrenci" };
                 await _roleManager.CreateAsync(role);
             }
 
-            await _userManager.AddToRoleAsync(user, "Uye");
+            await _userManager.AddToRoleAsync(user, "Ogrenci");
             result.Status = true;
-            result.Message = "Üye Eklendi";
+            result.Message = "Ogrenci Eklendi";
             return result;
         }
 
@@ -85,7 +87,7 @@ namespace Odev_Dagitim_Portali.Controllers
             if (user is null)
             {
                 result.Status = false;
-                result.Message = "Üye Bulunamadı!";
+                result.Message = "Ogrenci Bulunamadı!";
                 return result;
             }
             var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, dto.Password);
@@ -115,10 +117,36 @@ namespace Odev_Dagitim_Portali.Controllers
             var token = GenerateJWT(authClaims);
             
             result.Status = true;
-            result.Message = user.UserName.ToString()+"  "+token ;
+            result.Message = "Bearer "+token ;
             return result;
 
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<ResultDto> GiveRole(AddRoleDto dto)
+        {
+
+            var user = await _userManager.FindByNameAsync(dto.UserName);
+            var roleExist = await _roleManager.RoleExistsAsync(dto.Role);
+            if (!roleExist)
+            {
+                var role = new AppRole { Name = dto.Role };
+                await _roleManager.CreateAsync(role);
+            }
+
+            await _userManager.AddToRoleAsync(user, dto.Role);
+            result.Message = "Rol Eklendi "+dto.Role ;
+            result.Status = true;
+            return result;
+        }
+
+
+
+
+
+
+
         private string GenerateJWT(List<Claim> claims)
         {
 
@@ -139,7 +167,7 @@ namespace Odev_Dagitim_Portali.Controllers
 
             return token;
         }
-
+        
 
     }
 }
