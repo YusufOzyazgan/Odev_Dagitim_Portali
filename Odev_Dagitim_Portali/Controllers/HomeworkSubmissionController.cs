@@ -21,22 +21,17 @@ namespace Odev_Dagitim_Portali.Controllers
     [ApiController]
     public class HomeworkSubmissionController : ControllerBase
     {
-        private readonly IFileProvider _fileProvider;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IManageImage _iManageImage;
         ResultDto result = new ResultDto();
 
-        public HomeworkSubmissionController(AppDbContext context, IMapper mapper, UserManager<AppUser> userManager, IFileProvider fileProvider, IWebHostEnvironment hostingEnvironment, IManageImage iManageImage)
+        public HomeworkSubmissionController(AppDbContext context, IMapper mapper, IManageImage iManageImage)
         {
             _context = context;
             _mapper = mapper;
-            _userManager = userManager;
-            _fileProvider = fileProvider;
-            _hostingEnvironment = hostingEnvironment;
+            
             _iManageImage = iManageImage;
         }
         [HttpGet]
@@ -54,6 +49,7 @@ namespace Odev_Dagitim_Portali.Controllers
         public HomeworkDto Get(int id)
         {
             var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
+
             var homeworkDto = _mapper.Map<HomeworkDto>(homework);
             return homeworkDto;
         }
@@ -130,7 +126,7 @@ namespace Odev_Dagitim_Portali.Controllers
             if (submission == null)
             {
                 result.Status = false;
-                result.Message = "Ürün Bulunamadı!";
+                result.Message = "Ödev Bulunamadı!";
                 return result;
             }
             submission.File_name = fileName;
@@ -140,25 +136,25 @@ namespace Odev_Dagitim_Portali.Controllers
             _context.Homework_submissions.Update(submission);
             _context.SaveChanges();
             result.Status = true;
-            result.Message = "Ürün Düzenlendi";
+            result.Message = "Ödev Düzenlendi";
             return result;
         }
-
+        [Authorize(Roles = "Ogretmen,Admin")]
         [HttpDelete]
         [Route("{id}")]
         public ResultDto Delete(int id)
         {
-            var product = _context.Homework_submissions.Where(s => s.Submission_id == id).SingleOrDefault();
-            if (product == null)
+            var submission = _context.Homework_submissions.Where(s => s.Submission_id == id).SingleOrDefault();
+            if (submission == null)
             {
                 result.Status = false;
-                result.Message = "Ürün Bulunamadı!";
+                result.Message = "Ödev Bulunamadı!";
                 return result;
             }
-            _context.Homework_submissions.Remove(product);
+            _context.Homework_submissions.Remove(submission);
             _context.SaveChanges();
             result.Status = true;
-            result.Message = "Ürün Silindi";
+            result.Message = "Ödev Silindi";
             return result;
         }
 

@@ -7,6 +7,6 @@ namespace Odev_Dagitim_Portali.Dtos
         [Key]
         public int Department_id { get; set; }
 
-        public string Department_name { get; }
+        public string Department_name { get; set; }
     }
 }

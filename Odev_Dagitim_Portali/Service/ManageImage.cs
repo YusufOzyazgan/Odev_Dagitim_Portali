@@ -22,7 +22,7 @@ namespace Odev_Dagitim_Portali.Service
 
 
                 FileInfo _FileInfo = new FileInfo(_IFormFile.FileName);
-                FileName = guidstr+_IFormFile.FileName ;
+                FileName = guidstr+"-"+_IFormFile.FileName ;
                 var _GetFilePath = Helper.Common.GetFilePath(FileName);
                 using (var _FileStream = new FileStream(_GetFilePath, FileMode.Create))
                 {

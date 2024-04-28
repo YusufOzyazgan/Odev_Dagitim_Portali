@@ -26,7 +26,7 @@ namespace Odev_Dagitim_Portali.Controllers
             _mapper = mapper;
             _userManager = userManager;
         }
-        [Authorize(Roles = "Ogretmen,Admin")]
+        
         [HttpGet]
         public List<HomeworkDto> GetList()
         {
@@ -36,7 +36,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        [Authorize]
+        
         public HomeworkDto Get(int id)
         {
             var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
@@ -124,13 +124,13 @@ namespace Odev_Dagitim_Portali.Controllers
             if (homework == null)
             {
                 result.Status = false;
-                result.Message = "Ürün Bulunamadı!";
+                result.Message = "Ödev Bulunamadı!";
                 return result;
             }
             _context.Homeworks.Remove(homework);
             _context.SaveChanges();
             result.Status = true;
-            result.Message = "Ürün Silindi";
+            result.Message = "Ödev Silindi";
             return result;
         }
 
