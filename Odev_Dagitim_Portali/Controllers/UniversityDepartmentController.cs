@@ -41,6 +41,7 @@ namespace Odev_Dagitim_Portali.Controllers
             var department = _context.University_departments.Where(s => s.Department_id == id).SingleOrDefault();
             var departmentDto = _mapper.Map<University_departmentDto>(department);
             return departmentDto;
+            
         }
 
         [HttpPost]
