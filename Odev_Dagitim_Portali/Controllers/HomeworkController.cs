@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace Odev_Dagitim_Portali.Controllers
 {
     [Authorize] 
-    [Route("api/Homeworks")]
+    [Route("api/Homeworks/[Action]")]
     [ApiController]
     public class HomeworkController : ControllerBase
     {
@@ -45,16 +45,16 @@ namespace Odev_Dagitim_Portali.Controllers
         }
         
         [HttpGet]
-        [Route("{id}/Homework_submission")]
-        public List<Homework_submissionDto> GetHomeworkSubmissions(int id)
+        [Route("{id}")]
+        public List<HomeworkSubmissionDto> GetHomeworkSubmissions(int id)
         {
-            var homework_submissions = _context.Homework_submissions.Where(s => s.Homework_id == id).ToList();
-            var homework_submissionDtos = _mapper.Map<List<Homework_submissionDto>>(homework_submissions);
+            var homework_submissions = _context.HomeworkSubmissions.Where(s => s.Homework_id == id).ToList();
+            var homework_submissionDtos = _mapper.Map<List<HomeworkSubmissionDto>>(homework_submissions);
             return homework_submissionDtos;
         }
         [HttpPost]
         [Authorize(Roles = "Ogretmen,Admin")]
-        public async Task<ResultDto> Post(HomeworkDto dto)
+        public async Task<ResultDto> Add(HomeworkDto dto)
         {
            
 
@@ -93,7 +93,7 @@ namespace Odev_Dagitim_Portali.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Ogretmen,Admin")]
-        public ResultDto Put(HomeworkDto dto)
+        public ResultDto Edit(HomeworkDto dto)
         {
             var homework= _context.Homeworks.Where(s => s.Homework_id == dto.Homework_id).SingleOrDefault();
             if (homework == null)

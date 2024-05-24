@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Odev_Dagitim_Portali.Models
 {
-    public class Homework_submission
+    public class HomeworkSubmission
     {
         [Key]
         public int Submission_id { get; set; }
@@ -13,12 +13,12 @@ namespace Odev_Dagitim_Portali.Models
 
         [ForeignKey("Homeworks")]
         public int Homework_id {  get; set; }
-
+        public Homework Homeworks { get; set; }
 
         [ForeignKey("AppUsers")]
         public string User_id { get; set; }  
 
         public AppUser AppUsers { get; set; }
-        public Homework Homeworks { get; set; }
+      
     }
 }

@@ -7,7 +7,7 @@
         public string Full_name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public int Department_id { get; set; }   
+      
 
     }
 }

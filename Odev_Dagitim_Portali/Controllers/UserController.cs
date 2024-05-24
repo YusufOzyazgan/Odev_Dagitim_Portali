@@ -51,9 +51,9 @@ namespace Odev_Dagitim_Portali.Controllers
         }
 
         [HttpPost]
-        public async Task<ResultDto> Add(RegisterDto dto)
+        public async Task<ResultDto> Register(RegisterDto dto)
         {
-            var identityResult = await _userManager.CreateAsync(new() { UserName = dto.UserName, Email = dto.Email, Full_name = dto.Full_name,Department_id = dto.Department_id, PhoneNumber = dto.PhoneNumber }, dto.Password);
+            var identityResult = await _userManager.CreateAsync(new() { UserName = dto.UserName, Email = dto.Email, Full_name = dto.Full_name,Class_id = dto.Class_id, PhoneNumber = dto.PhoneNumber }, dto.Password);
 
             if (!identityResult.Succeeded)
             {
@@ -123,7 +123,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ResultDto> GiveRole(AddRoleDto dto)
         {
 

@@ -5,6 +5,6 @@
         public int Lesson_id { get; set; }
 
         public string Lesson_name { get; set; }
-        public int Department_id { get; set; }
+        public int Class_id { get; set; }
     }
 }

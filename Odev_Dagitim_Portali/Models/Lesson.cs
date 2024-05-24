@@ -11,9 +11,9 @@ namespace Odev_Dagitim_Portali.Models
 
         public string Lesson_name { get; set; } 
 
-        [ForeignKey("University_departments")]
-        public int Department_id { get; set; }
-        public University_department University_departments { get; set; }
+        [ForeignKey("Classes")]
+        public int Class_id { get; set; }
+        public Class Classes { get; set; }
         public List<Homework> Homeworks { get; set; }    
     }
 }

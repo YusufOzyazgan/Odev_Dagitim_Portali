@@ -10,9 +10,9 @@ namespace Odev_Dagitim_Portali.Models
         }
 
 
-        public DbSet<Homework_submission> Homework_submissions{ get; set; }
+        public DbSet<HomeworkSubmission> HomeworkSubmissions{ get; set; }
         public DbSet<Homework> Homeworks { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<University_department> University_departments{ get; set; }
+        public DbSet<Class> Classes{ get; set; }
     }
 }

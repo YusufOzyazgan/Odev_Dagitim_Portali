@@ -39,7 +39,7 @@ namespace Odev_Dagitim_Portali.Controllers
         [HttpGet]
         [Route("{id}")]
         
-        public LessonDto Get(int id)
+        public LessonDto GetById(int id)
         {
             var lesson = _context.Lessons.Where(s => s.Lesson_id == id).SingleOrDefault();
             var lessonDto = _mapper.Map<LessonDto>(lesson);
@@ -77,7 +77,7 @@ namespace Odev_Dagitim_Portali.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Ogretmen,Admin")]
-        public ResultDto Put(LessonDto dto)
+        public ResultDto Edit(LessonDto dto)
         {
             var lesson = _context.Lessons.Where(s => s.Lesson_id == dto.Lesson_id).SingleOrDefault();
             if (lesson == null)
@@ -87,7 +87,7 @@ namespace Odev_Dagitim_Portali.Controllers
                 return result;
             }
             lesson.Lesson_name = dto.Lesson_name;
-            lesson.Department_id = dto.Department_id;
+            lesson.Class_id = dto.Class_id;
             
             _context.Lessons.Update(lesson);
             _context.SaveChanges();

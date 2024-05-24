@@ -2,7 +2,7 @@
 
 namespace Odev_Dagitim_Portali.Dtos
 {
-    public class Homework_submissionDto
+    public class HomeworkSubmissionDto
     {
         public int? Submission_id { get; set; }
         public IFormFile file { get; set; }

@@ -15,7 +15,7 @@ namespace Odev_Dagitim_Portali.Dtos
         public DateTime Homework_deadline { get; set; }
 
         public int Lesson_id { get; set; }
-
+        
         public string? User_id { get; set; }
 
     }

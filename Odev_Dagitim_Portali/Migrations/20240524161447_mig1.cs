@@ -26,15 +26,44 @@ namespace Odev_Dagitim_Portali.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "University_departments",
+                name: "AspNetUsers",
                 columns: table => new
                 {
-                    Department_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Full_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Student_number = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Class_id = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_University_departments", x => x.Department_id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Classes",
+                columns: table => new
+                {
+                    Class_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Class_name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Classes", x => x.Class_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -55,60 +84,6 @@ namespace Odev_Dagitim_Portali.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Full_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Student_number = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Department_id = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_University_departments_Department_id",
-                        column: x => x.Department_id,
-                        principalTable: "University_departments",
-                        principalColumn: "Department_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Lessons",
-                columns: table => new
-                {
-                    Lesson_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Lesson_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Department_id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Lessons", x => x.Lesson_id);
-                    table.ForeignKey(
-                        name: "FK_Lessons_University_departments_Department_id",
-                        column: x => x.Department_id,
-                        principalTable: "University_departments",
-                        principalColumn: "Department_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -198,6 +173,50 @@ namespace Odev_Dagitim_Portali.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppUserClass",
+                columns: table => new
+                {
+                    AppUsersId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClassesClass_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUserClass", x => new { x.AppUsersId, x.ClassesClass_id });
+                    table.ForeignKey(
+                        name: "FK_AppUserClass_AspNetUsers_AppUsersId",
+                        column: x => x.AppUsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppUserClass_Classes_ClassesClass_id",
+                        column: x => x.ClassesClass_id,
+                        principalTable: "Classes",
+                        principalColumn: "Class_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lessons",
+                columns: table => new
+                {
+                    Lesson_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Lesson_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Class_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lessons", x => x.Lesson_id);
+                    table.ForeignKey(
+                        name: "FK_Lessons_Classes_Class_id",
+                        column: x => x.Class_id,
+                        principalTable: "Classes",
+                        principalColumn: "Class_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Homeworks",
                 columns: table => new
                 {
@@ -205,6 +224,8 @@ namespace Odev_Dagitim_Portali.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Homework_title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Homework_content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Homework_deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Lesson_id = table.Column<int>(type: "int", nullable: false),
                     User_id = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -217,13 +238,13 @@ namespace Odev_Dagitim_Portali.Migrations
                         column: x => x.User_id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Homeworks_Lessons_Lesson_id",
                         column: x => x.Lesson_id,
                         principalTable: "Lessons",
                         principalColumn: "Lesson_id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,6 +254,8 @@ namespace Odev_Dagitim_Portali.Migrations
                     Submission_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     File_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Homework_id = table.Column<int>(type: "int", nullable: false),
                     User_id = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -250,8 +273,13 @@ namespace Odev_Dagitim_Portali.Migrations
                         column: x => x.Homework_id,
                         principalTable: "Homeworks",
                         principalColumn: "Homework_id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUserClass_ClassesClass_id",
+                table: "AppUserClass",
+                column: "ClassesClass_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -286,12 +314,6 @@ namespace Odev_Dagitim_Portali.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_Department_id",
-                table: "AspNetUsers",
-                column: "Department_id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -306,8 +328,7 @@ namespace Odev_Dagitim_Portali.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Homework_submissions_User_id",
                 table: "Homework_submissions",
-                column: "User_id",
-                unique: true);
+                column: "User_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Homeworks_Lesson_id",
@@ -317,18 +338,20 @@ namespace Odev_Dagitim_Portali.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Homeworks_User_id",
                 table: "Homeworks",
-                column: "User_id",
-                unique: true);
+                column: "User_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_Department_id",
+                name: "IX_Lessons_Class_id",
                 table: "Lessons",
-                column: "Department_id");
+                column: "Class_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppUserClass");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -360,7 +383,7 @@ namespace Odev_Dagitim_Portali.Migrations
                 name: "Lessons");
 
             migrationBuilder.DropTable(
-                name: "University_departments");
+                name: "Classes");
         }
     }
 }

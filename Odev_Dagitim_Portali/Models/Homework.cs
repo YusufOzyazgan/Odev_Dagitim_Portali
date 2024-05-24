@@ -20,9 +20,10 @@ namespace Odev_Dagitim_Portali.Models
 
         [ForeignKey("AppUsers")]
         public string User_id { get; set; } 
+       
         public AppUser AppUsers { get; set; }
         public Lesson Lessons { get; set; }
-        public List<Homework_submission> Homework_submissions { get; set; }    
+        public List<HomeworkSubmission> HomeworkSubmissions { get; set; }    
         
     }
 }

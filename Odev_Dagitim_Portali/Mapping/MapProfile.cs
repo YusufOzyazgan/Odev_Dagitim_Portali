@@ -10,10 +10,10 @@ namespace Odev_Dagitim_Portali.Mapping
         public MapProfile()
         {
             CreateMap<Homework, HomeworkDto>().ReverseMap();
-            CreateMap<Homework_submission, Homework_submissionDto>().ReverseMap();
+            CreateMap<HomeworkSubmission, HomeworkSubmissionDto>().ReverseMap();
             CreateMap<AppUser, UserDto>().ReverseMap();
             CreateMap<Lesson, LessonDto>().ReverseMap();
-            CreateMap<University_department,University_departmentDto>().ReverseMap();
+            CreateMap<Class,ClassDto>().ReverseMap();
 
         }
     }
