@@ -14,5 +14,7 @@ namespace Odev_Dagitim_Portali.Models
         public DbSet<Homework> Homeworks { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Class> Classes{ get; set; }
+        public DbSet<UserClass> UserClasses { get; set; }
+
     }
 }

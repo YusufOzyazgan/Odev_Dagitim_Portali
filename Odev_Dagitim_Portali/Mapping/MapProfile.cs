@@ -14,6 +14,7 @@ namespace Odev_Dagitim_Portali.Mapping
             CreateMap<AppUser, UserDto>().ReverseMap();
             CreateMap<Lesson, LessonDto>().ReverseMap();
             CreateMap<Class,ClassDto>().ReverseMap();
+            CreateMap<UserClass, UserClassDto>().ReverseMap();
 
         }
     }

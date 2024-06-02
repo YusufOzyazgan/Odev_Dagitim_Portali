@@ -35,7 +35,7 @@ namespace Odev_Dagitim_Portali.Controllers
             _iManageImage = iManageImage;
         }
         [HttpGet]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         [Route("List")]
         public List<HomeworkSubmissionDto> GetList()
         {
@@ -45,7 +45,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         public HomeworkDto Get(int id)
         {
             var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
@@ -99,7 +99,7 @@ namespace Odev_Dagitim_Portali.Controllers
             // Sonucu döndürüyoruz
             return result;
         }
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         [HttpGet]
         [Route("DownloadFile")]
         public async Task<IActionResult> DownloadFile(string FileName)
@@ -139,7 +139,7 @@ namespace Odev_Dagitim_Portali.Controllers
             result.Message = "Ödev Düzenlendi";
             return result;
         }
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         [HttpDelete]
         [Route("{id}")]
         public ResultDto Delete(int id)

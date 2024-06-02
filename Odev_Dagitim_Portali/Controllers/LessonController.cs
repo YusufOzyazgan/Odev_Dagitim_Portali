@@ -45,17 +45,24 @@ namespace Odev_Dagitim_Portali.Controllers
             var lessonDto = _mapper.Map<LessonDto>(lesson);
             return lessonDto;
         }
+        [HttpGet]
+        
+        public List<LessonDto> GetLessonByClassId(int id)
+        {
+
+            var lesson = _context.Lessons.Where(s => s.Class_id == id).ToList();
+            var lessonDtos = _mapper.Map<List<LessonDto>>(lesson);
+            return lessonDtos;
+        }
+
+
 
         [HttpPost]
-        [Authorize(Roles = "Ogretmen,Admin")]
-        public async Task<ResultDto> Post(LessonDto dto)
+        [Authorize(Roles = "Teacher,Admin")]
+        public async Task<ResultDto> Add(LessonDto dto)
         {
 
 
-
-            
-
-            
             
             try
             {
@@ -76,7 +83,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         public ResultDto Edit(LessonDto dto)
         {
             var lesson = _context.Lessons.Where(s => s.Lesson_id == dto.Lesson_id).SingleOrDefault();
@@ -99,7 +106,7 @@ namespace Odev_Dagitim_Portali.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         public ResultDto Delete(int id)
         {
             var lesson = _context.Lessons.Where(s => s.Lesson_id == id).SingleOrDefault();

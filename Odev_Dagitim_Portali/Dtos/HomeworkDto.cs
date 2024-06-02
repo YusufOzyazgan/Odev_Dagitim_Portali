@@ -9,12 +9,13 @@ namespace Odev_Dagitim_Portali.Dtos
 
         public string Homework_title { get; set; }
         public string Homework_content { get; set; }
+        public int Lesson_id { get; set; }
 
-        public DateTime Created { get; set; }
-        public DateTime Updated { get; set; }
+        public DateTime? Created { get; set; }
+        public DateTime? Updated { get; set; }
         public DateTime Homework_deadline { get; set; }
 
-        public int Lesson_id { get; set; }
+       
         
         public string? User_id { get; set; }
 

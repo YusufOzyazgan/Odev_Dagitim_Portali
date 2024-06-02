@@ -53,20 +53,15 @@ namespace Odev_Dagitim_Portali.Controllers
             return homework_submissionDtos;
         }
         [HttpPost]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         public async Task<ResultDto> Add(HomeworkDto dto)
         {
            
-
-
-            var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            var userID = usernameClaim.Value.ToString();
             
-            ;
-            if (userID == null)
+            if (dto == null)
             {
                 result.Status = false;
-                result.Message = "Kayıt için giriş yapmalısınız !!!";
+                result.Message = "Değerleri Doldurun !!!";
                 return result;
             }
             try
@@ -76,7 +71,7 @@ namespace Odev_Dagitim_Portali.Controllers
                 homework.Updated = DateTime.Now;
                 homework.Created = DateTime.Now;
               
-                homework.User_id = userID;
+               
 
                 _context.Homeworks.Add(homework);
                 _context.SaveChanges();
@@ -92,7 +87,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         public ResultDto Edit(HomeworkDto dto)
         {
             var homework= _context.Homeworks.Where(s => s.Homework_id == dto.Homework_id).SingleOrDefault();
@@ -117,7 +112,7 @@ namespace Odev_Dagitim_Portali.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        [Authorize(Roles = "Ogretmen,Admin")]
+        [Authorize(Roles = "Teacher,Admin")]
         public ResultDto Delete(int id)
         {
             var homework= _context.Homeworks.Where(s => s.Homework_id== id).SingleOrDefault();

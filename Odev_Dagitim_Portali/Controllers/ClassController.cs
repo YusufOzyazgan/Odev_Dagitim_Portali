@@ -43,9 +43,26 @@ namespace Odev_Dagitim_Portali.Controllers
             return ClassDto;
 
         }
+        [HttpGet]
+        [Route("{userId}")]
+        public List<UserClassGetDto> GetUserClasses(string userId)
+        {
 
+            var userClasses = from uc in _context.UserClasses
+                              join c in _context.Classes on uc.ClassId equals c.Class_id
+                              join u in _context.Users on uc.UserId equals u.Id
+                              where uc.UserId == userId
+                              select new UserClassGetDto
+                              {
+                                  Id = uc.Id,
+                                  ClassName = c.Class_name,
+                                  ClassId = uc.ClassId,
+                              };
+
+            return userClasses.ToList();
+        }
         [HttpPost]
-        //[Authorize(Roles = "Ogretmen,Admin")]
+        //[Authorize(Roles = "Teacher,Admin")]
         public async Task<ResultDto> Add(ClassDto dto)
         {
 
@@ -68,9 +85,41 @@ namespace Odev_Dagitim_Portali.Controllers
             return result;
         }
 
+        [HttpPost]
+        public async Task<ResultDto> AddUserClass(UserClassDto dto)
+        {
+
+            try
+            {
+                bool isExisting = _context.UserClasses
+            .Any(uc => uc.UserId == dto.UserId && uc.ClassId == dto.ClassId);
+
+                if (isExisting)
+                {
+                    result.Status = false;
+                    result.Message = "Sınıf zaten ekli !";
+                    return result;
+                } 
+
+
+                var UserClass = _mapper.Map<UserClass>(dto);
+
+                _context.UserClasses.Add(UserClass);
+                _context.SaveChanges();
+                result.Status = true;
+                result.Message = "Sınıf Eklendi.";
+            }
+            catch (Exception ex)
+            {
+                result.Status = false;
+                result.Message = ex.Message;
+            }
+            return result;
+           
+        }
 
         [HttpPut]
-        //[Authorize(Roles = "Ogretmen,Admin")]
+        //[Authorize(Roles = "Teacher,Admin")]
         public ResultDto Edit(ClassDto dto)
         {
             var Class = _context.Classes.Where(s => s.Class_id == dto.Class_id).SingleOrDefault();
@@ -90,10 +139,28 @@ namespace Odev_Dagitim_Portali.Controllers
             return result;
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        public ResultDto DeleteUserClass(int id)
+        {
+            var UserClass = _context.UserClasses.Where(s => s.Id == id ).SingleOrDefault();
+            if (UserClass == null)
+            {
+                result.Status = false;
+                result.Message = "Sınıf Bulunamadı!";
+                return result;
+            }
+            _context.UserClasses.Remove(UserClass);
+            _context.SaveChanges();
+            result.Status = true;
+            result.Message = "Sınıf Silindi";
+            return result;
+        }
+
 
         [HttpDelete]
         [Route("{id}")]
-        //[Authorize(Roles = "Ogretmen,Admin")]
+        //[Authorize(Roles = "Teacher,Admin")]
         public ResultDto Delete(int id)
         {
             var Class = _context.Classes.Where(s => s.Class_id == id).SingleOrDefault();

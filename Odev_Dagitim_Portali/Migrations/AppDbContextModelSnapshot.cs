@@ -22,21 +22,6 @@ namespace Odev_Dagitim_Portali.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AppUserClass", b =>
-                {
-                    b.Property<string>("AppUsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ClassesClass_id")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppUsersId", "ClassesClass_id");
-
-                    b.HasIndex("ClassesClass_id");
-
-                    b.ToTable("AppUserClass");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -176,9 +161,6 @@ namespace Odev_Dagitim_Portali.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Class_id")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -359,19 +341,28 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.ToTable("Lessons");
                 });
 
-            modelBuilder.Entity("AppUserClass", b =>
+            modelBuilder.Entity("Odev_Dagitim_Portali.Models.UserClass", b =>
                 {
-                    b.HasOne("Odev_Dagitim_Portali.Models.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("AppUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasOne("Odev_Dagitim_Portali.Models.Class", null)
-                        .WithMany()
-                        .HasForeignKey("ClassesClass_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClasses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -474,16 +465,39 @@ namespace Odev_Dagitim_Portali.Migrations
                     b.Navigation("Classes");
                 });
 
+            modelBuilder.Entity("Odev_Dagitim_Portali.Models.UserClass", b =>
+                {
+                    b.HasOne("Odev_Dagitim_Portali.Models.Class", "Classes")
+                        .WithMany("UserClasses")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Odev_Dagitim_Portali.Models.AppUser", "AppUsers")
+                        .WithMany("UserClasses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUsers");
+
+                    b.Navigation("Classes");
+                });
+
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.AppUser", b =>
                 {
                     b.Navigation("HomeworkSubmissions");
 
                     b.Navigation("Homeworks");
+
+                    b.Navigation("UserClasses");
                 });
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.Class", b =>
                 {
                     b.Navigation("Lessons");
+
+                    b.Navigation("UserClasses");
                 });
 
             modelBuilder.Entity("Odev_Dagitim_Portali.Models.Homework", b =>

@@ -9,7 +9,7 @@ namespace Odev_Dagitim_Portali.Models
 
         public string Class_name { get; set; }
         public List<Lesson> Lessons { get; set; }
-
-        public List<AppUser> AppUsers { get; set; }
+        public List<UserClass> UserClasses { get; set; }
+        
     }
 }

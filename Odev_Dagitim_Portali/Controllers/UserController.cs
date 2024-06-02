@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Odev_Dagitim_Portali.Dtos;
 using Odev_Dagitim_Portali.Models;
@@ -24,14 +25,16 @@ namespace Odev_Dagitim_Portali.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly AppDbContext _context;
         ResultDto result = new ResultDto();
-        public UserController(UserManager<AppUser> userManager, IMapper mapper, RoleManager<AppRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager)
+        public UserController(UserManager<AppUser> userManager, IMapper mapper, RoleManager<AppRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager, AppDbContext context)
         {
             _userManager = userManager;
             _mapper = mapper;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
+            _context = context;
         }
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -41,19 +44,41 @@ namespace Odev_Dagitim_Portali.Controllers
             var userDtos = _mapper.Map<List<UserDto>>(users);
             return userDtos;
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Teacher")]
         [HttpGet]
+        [Route("{id}")] 
         public UserDto GetById(string id)
         {
             var user = _userManager.Users.Where(s => s.Id == id).SingleOrDefault();
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }
+        [Authorize]
+        [HttpPut]
+        public async Task<ResultDto> Update(UserDto dto)
+        {
+            var user = await _userManager.FindByNameAsync(dto.UserName);
+            if (user == null)
+            {
+                result.Status = false;
+                result.Message = "Kullanıcı Blunamadı!";
+            }
+
+            user.PhoneNumber = dto.PhoneNumber;
+            user.Full_name = dto.Full_name;
+            user.Email = dto.Email;
+
+            await _userManager.UpdateAsync(user);
+            result.Status = true;
+            result.Message = "Kullanıcı Güncellendi";
+
+            return result;
+        }
 
         [HttpPost]
-        public async Task<ResultDto> Register(RegisterDto dto)
+        public async Task<ResultDto> RegisterStudent(RegisterDto dto)
         {
-            var identityResult = await _userManager.CreateAsync(new() { UserName = dto.UserName, Email = dto.Email, Full_name = dto.Full_name,Class_id = dto.Class_id, PhoneNumber = dto.PhoneNumber }, dto.Password);
+            var identityResult = await _userManager.CreateAsync(new() { UserName = dto.UserName, Email = dto.Email, Full_name = dto.Full_name, PhoneNumber = dto.PhoneNumber }, dto.Password);
 
             if (!identityResult.Succeeded)
             {
@@ -66,16 +91,54 @@ namespace Odev_Dagitim_Portali.Controllers
                 return result;
             }
             var user = await _userManager.FindByNameAsync(dto.UserName);
-            var roleExist = await _roleManager.RoleExistsAsync("Ogrenci");
+            var roleExist = await _roleManager.RoleExistsAsync("Student");
             if (!roleExist)
             {
-                var role = new AppRole { Name = "Ogrenci" };
+                var role = new AppRole { Name = "Student" };
                 await _roleManager.CreateAsync(role);
             }
 
-            await _userManager.AddToRoleAsync(user, "Ogrenci");
+            await _userManager.AddToRoleAsync(user, "Student");
             result.Status = true;
             result.Message = "Ogrenci Eklendi";
+            return result;
+        }
+
+
+        [HttpPost]
+        public async Task<ResultDto> RegisterTeacher(RegisterDto dto)
+        {
+            if (!dto.Email.Contains("@akdeniz.edu.tr"))
+            {
+
+                result.Status = false;
+                result.Message = "Hatalı e-mail. Resmi e mail adresinizi kullanmanız gerkli!";
+                return result;
+            }
+
+            var identityResult = await _userManager.CreateAsync(new() { UserName = dto.UserName, Email = dto.Email, Full_name = dto.Full_name, PhoneNumber = dto.PhoneNumber }, dto.Password);
+
+            if (!identityResult.Succeeded)
+            {
+                result.Status = false;
+                foreach (var item in identityResult.Errors)
+                {
+                    result.Message += "<p>" + item.Description + "<p>";
+                }
+
+                return result;
+            }
+            var user = await _userManager.FindByNameAsync(dto.UserName);
+            var roleExist = await _roleManager.RoleExistsAsync("Teacher");
+            if (!roleExist)
+            {
+                var role = new AppRole { Name = "Teacher" };
+                await _roleManager.CreateAsync(role);
+            }
+
+            await _userManager.AddToRoleAsync(user, "Teacher");
+            result.Status = true;
+            result.Message = "Öğretmen Eklendi";
             return result;
         }
 
@@ -117,7 +180,7 @@ namespace Odev_Dagitim_Portali.Controllers
             var token = GenerateJWT(authClaims);
             
             result.Status = true;
-            result.Message = "Bearer "+token ;
+            result.Message = token ;
             return result;
 
         }
@@ -136,12 +199,12 @@ namespace Odev_Dagitim_Portali.Controllers
             }
 
             await _userManager.AddToRoleAsync(user, dto.Role);
-            result.Message = "Rol Eklendi "+dto.Role ;
+            result.Message = dto.Role +" rolü Eklendi";
             result.Status = true;
             return result;
         }
 
-
+        
 
 
 
