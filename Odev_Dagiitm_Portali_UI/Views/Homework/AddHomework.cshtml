@@ -62,7 +62,7 @@
                 var token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
 
                 if (!token) {
-                    window.location.href = ApiBaseUrl + 'Account/Login';
+                    window.location.href = "~/Home/Login";
                 }
 
                 $.ajaxSetup({
@@ -83,7 +83,7 @@
                             console.log(response);
                             response.forEach(function (subject) {
                                 subjectSelect.append('<option value="' + subject.lesson_id + '">' + subject.lesson_name + '</option>');
-                                //console.log({ subject: $('#subject').val(), title: $('#title').val(), content: $('#content').val(), dueDate: $('#dueDate').val() });
+                                console.log({ subject: $('#subject').val(), title: $('#title').val(), content: $('#content').val(), dueDate: $('#dueDate').val() });
                             
                             });
                         },

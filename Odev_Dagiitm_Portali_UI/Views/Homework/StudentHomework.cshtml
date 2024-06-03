@@ -21,7 +21,8 @@
                 <th class="text-white">Ders İsmi</th>
                 <th class="text-white">Ödev Başlığı</th>
                 <th class="text-white">Son Teslim Tarihi</th>
-                <th class="text-white">Göster/Düzenle</th>
+                <th class="text-white">Göster</th>
+                <th class="text-white">Ödev Teslimi</th>
                 <th class="text-white" id="btnDelete">Sil</th>
 
             </tr>
@@ -88,6 +89,7 @@
                                             '<td>' + item.homework_title + '</td>' +
                                             '<td>' + FormatDate(item.homework_deadline) + '</td>' +
                                             '<td><button class="btn btn-primary btn-sm"> <a href="ShowHomework/' + item.homework_id + '" class="btn-no-underline btn-btn-primary text-white btn-sm">Göster</a></button></td>' +
+                                            '<td><button class="btn btn-info btn-sm"> <a href="addHomeworkSubmission/' + item.homework_id + '" class="btn-no-underline btn-btn-primary text-white btn-sm">Ödev Teslimi</a></button></td>' +
                                             '<td><button class="btn btn-danger delete-btn" data-homework-id=' + item.homework_id + '>Sil</button></td>' +
                                             '</tr>'
                                         );

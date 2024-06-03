@@ -60,6 +60,13 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
             return View();
         }
 
+        public IActionResult AddHomeworkSubmission(int id) {
+            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
+            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            ViewBag.HomeworkId = id;
+            return View();
+        }
+
 
 
 

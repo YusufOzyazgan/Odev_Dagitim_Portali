@@ -149,13 +149,13 @@
                     type: 'DELETE',
                     success: function (result) {
                         $("#divResult").show();
-                        if (result.status) { // 'data' yerine 'result' kullanıldı
-                            $("#divResult").removeClass().addClass("alert alert-success"); // '$("divResult")' ifadesi düzeltildi
+                        if (result.status) { 
+                            $("#divResult").removeClass().addClass("alert alert-success"); 
                             showUserClass();
                         } else {
                             $("#divResult").removeClass().addClass("alert alert-danger");
                         }
-                        $("#divResult").html(result.message); // 'data' yerine 'result' kullanıldı
+                        $("#divResult").html(result.message); 
                         $("#divResult").fadeOut(4000);
                     },
                     error: function (e) {
