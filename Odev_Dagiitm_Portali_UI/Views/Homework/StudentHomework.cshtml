@@ -1,13 +1,14 @@
 ﻿
 @{
-    ViewData["Title"] = "MyHomeworks";
+    ViewData["Title"] = "StudentHomework";
 }
+
 <style>
     .btn-no-underline {
         text-decoration: none; /* Alt çizgiyi kaldırır */
     }
 </style>
-    <h3>Ödevler</h3>
+<h3>Ödevler</h3>
 
 <div class="col-md-11">
     <div id="progress"></div>
@@ -15,7 +16,7 @@
     <table class="table table-striped " id="tbExams">
         <thead class="bg-dark">
             <tr>
-                
+
                 <th class="text-white">Sınıf İsmi</th>
                 <th class="text-white">Ders İsmi</th>
                 <th class="text-white">Ödev Başlığı</th>
@@ -33,19 +34,19 @@
     <script>
         $(document).ready(function () {
             var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
+            var token = localStorage.getItem("token"); 
 
-            // Tarih biçimini düzenlemek için bir fonksiyon
+           
             function FormatDate(d) {
                 var date = new Date(d);
                 var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
                 var month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1); // Ay 0'dan başladığı için +1 ekliyoruz
                 var year = date.getFullYear();
-                return day + "." + month + "." + year; // Biçimlendirilmiş tarihi döndür
+                return day + "." + month + "." + year;
             }
 
             if (!token) {
-                window.location.href = '~/Home/Login'; // Token yoksa giriş sayfasına yönlendir
+                window.location.href = '~/Home/Login'; 
             }
 
             $.ajaxSetup({
@@ -53,7 +54,7 @@
             });
 
             $.ajax({
-                url: ApiBaseUrl + "Homeworks/GetHomeworksByTeacher",
+                url: ApiBaseUrl + "Homeworks/GetHomeworksByStudent",
                 data: { id: userId },
                 type: "GET",
                 success: function (data) {
@@ -86,7 +87,7 @@
                                             '<td>' + lessonName + '</td>' +
                                             '<td>' + item.homework_title + '</td>' +
                                             '<td>' + FormatDate(item.homework_deadline) + '</td>' +
-                                            '<td><button class="btn btn-primary btn-sm"> <a href="/EditHomework/' + item.homework_id + '" class="btn-no-underline btn-btn-primary text-white btn-sm">Göster</a></button></td>' +
+                                            '<td><button class="btn btn-primary btn-sm"> <a href="ShowHomework/' + item.homework_id + '" class="btn-no-underline btn-btn-primary text-white btn-sm">Göster</a></button></td>' +
                                             '<td><button class="btn btn-danger delete-btn" data-homework-id=' + item.homework_id + '>Sil</button></td>' +
                                             '</tr>'
                                         );
@@ -133,5 +134,6 @@
         });
     </script>
 }
+
 
 

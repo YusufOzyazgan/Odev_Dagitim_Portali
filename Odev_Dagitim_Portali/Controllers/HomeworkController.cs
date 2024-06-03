@@ -37,13 +37,50 @@ namespace Odev_Dagitim_Portali.Controllers
         [HttpGet]
         [Route("{id}")]
         
-        public HomeworkDto Get(int id)
+        public HomeworkDto GetById(int id)
         {
             var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
             var homeworkDto = _mapper.Map<HomeworkDto>(homework);
             return homeworkDto;
         }
-        
+
+
+        [HttpGet]
+        public List<HomeworkDto> GetHomeworksByTeacher(string id)
+        {
+            var homeworks = _context.Homeworks.Where(s => s.User_id == id).ToList();
+            var homeworkDtos = _mapper.Map<List<HomeworkDto>>(homeworks);
+            return homeworkDtos;
+        }
+
+        [HttpGet]
+        public List<HomeworkDto> GetHomeworksByStudent(string id)
+        {
+            // UserId'ye ait tüm sınıfları alıyoruz
+            var Classes = _context.UserClasses.Where(s => s.UserId == id).ToList();
+            var ClassIds = Classes.Select(c => c.ClassId).ToList();
+
+            List<Homework> allHomeworks = new List<Homework>();
+
+            foreach (var classId in ClassIds)
+            {
+                // Her bir sınıf id'ye ait tüm dersleri alıyoruz
+                var lessons = _context.Lessons.Where(l => l.Class_id == classId).ToList();
+                var lessonIds = lessons.Select(l => l.Lesson_id).ToList();
+
+                foreach (var lessonId in lessonIds)
+                {
+                    // Her bir ders id'ye ait tüm ödevleri alıyoruz
+                    var homeworks = _context.Homeworks.Where(h => h.Lesson_id == lessonId).ToList();
+                    allHomeworks.AddRange(homeworks);
+                }
+            }
+
+            // Tüm ödevleri DTO'lara dönüştürüyoruz
+            var homeworkDtos = _mapper.Map<List<HomeworkDto>>(allHomeworks);
+            return homeworkDtos;
+
+        }
         [HttpGet]
         [Route("{id}")]
         public List<HomeworkSubmissionDto> GetHomeworkSubmissions(int id)

@@ -44,10 +44,10 @@ namespace Odev_Dagitim_Portali.Controllers
             var userDtos = _mapper.Map<List<UserDto>>(users);
             return userDtos;
         }
-        [Authorize(Roles = "Admin,Teacher")]
+        [Authorize(Roles = "Admin,Teacher,Student")]
         [HttpGet]
         [Route("{id}")] 
-        public UserDto GetById(string id)
+        public UserDto GetById(string id)   
         {
             var user = _userManager.Users.Where(s => s.Id == id).SingleOrDefault();
             var userDto = _mapper.Map<UserDto>(user);

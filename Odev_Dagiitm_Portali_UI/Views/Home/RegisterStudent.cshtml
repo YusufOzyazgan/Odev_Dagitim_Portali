@@ -59,15 +59,7 @@
                                             <input type="password" class="form-control form-control-user"
                                                    id="txtPassword" placeholder="Parola">
                                         </div>
-                                        <div class="form-group m-1">
-                                            <select id="class" name="SelectedClass" class="form-select">
-                                                <option value="1">Edebiyat</option>
-                                                <option value="2">Bilgisayar Programcılğı</option>
-                                                <option value="3">Elektrik Elektronik Mühendisliği</option>
-                                                <option value="4">Makine Mühendisliği</option>
-                                                <option value="5">İngiliz Dili Ve Edebiyatı</option>
-                                            </select>
-                                        </div>
+                                        
                                         <a class="btn btn-primary btn-user btn-block" id="btnSignIn">
                                             Kayıt Ol
                                         </a>
@@ -104,11 +96,11 @@
                     var fullname = $("#txtFullName").val();
                     var phonenumber = $("#txtPhoneNumber").val();
                     var email = $("#txtEmail").val();
-                    var selectedclass = parseInt($("#class").val(), 10);
+                 
 
-                    console.log(selectedclass);
+      
 
-                    if (username == "" || password == "" || fullname == "" || email == "" || phonenumber == "" || selectedclass == "") {
+                    if (username == "" || password == "" || fullname == "" || email == "" || phonenumber == "" ) {
                         $("#divResult")
                             .show()
                             .removeClass()
@@ -124,8 +116,7 @@
                     register.Full_name = fullname;
                     register.PhoneNumber = phonenumber;
                     register.Email = email;
-                    register.Class_id = selectedclass;
-
+                  
                     console.log(JSON.stringify(register));
                     console.log(ApiBaseUrl + "User/RegisterStudent");
 

@@ -34,6 +34,34 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         }
 
+        [Route("EditHomework/{id}")]
+        public IActionResult EditHomework(int id)
+        {
+            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
+            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            ViewBag.HomeworkId = id;
+            return View();
+
+        }
+
+        public IActionResult StudentHomework()
+        {
+            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
+            ViewBag.ApiBaseUrl = ApiBaseUrl;
+           
+            return View();
+        }
+
+        public IActionResult ShowHomework(int id)
+        {
+            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
+            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            ViewBag.HomeworkId = id;
+            return View();
+        }
+
+
+
 
 
 
