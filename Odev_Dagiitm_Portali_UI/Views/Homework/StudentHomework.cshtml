@@ -9,8 +9,9 @@
     }
 </style>
 <h3>Ödevler</h3>
-
-<div class="col-md-11">
+<hr />
+<br />
+<div class="col-md-12">
     <div id="progress"></div>
 
     <table class="table table-striped " id="tbExams">
@@ -23,7 +24,7 @@
                 <th class="text-white">Son Teslim Tarihi</th>
                 <th class="text-white">Göster</th>
                 <th class="text-white">Ödev Teslimi</th>
-                <th class="text-white" id="btnDelete">Sil</th>
+               
 
             </tr>
         </thead>
@@ -90,7 +91,6 @@
                                             '<td>' + FormatDate(item.homework_deadline) + '</td>' +
                                             '<td><button class="btn btn-primary btn-sm"> <a href="ShowHomework/' + item.homework_id + '" class="btn-no-underline btn-btn-primary text-white btn-sm">Göster</a></button></td>' +
                                             '<td><button class="btn btn-info btn-sm"> <a href="addHomeworkSubmission/' + item.homework_id + '" class="btn-no-underline btn-btn-primary text-white btn-sm">Ödev Teslimi</a></button></td>' +
-                                            '<td><button class="btn btn-danger delete-btn" data-homework-id=' + item.homework_id + '>Sil</button></td>' +
                                             '</tr>'
                                         );
                                     },

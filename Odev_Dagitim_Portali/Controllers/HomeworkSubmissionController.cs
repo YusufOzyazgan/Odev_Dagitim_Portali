@@ -21,7 +21,7 @@ namespace Odev_Dagitim_Portali.Controllers
     [ApiController]
     public class HomeworkSubmissionController : ControllerBase
     {
-        
+      
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly IManageImage _iManageImage;
@@ -35,7 +35,7 @@ namespace Odev_Dagitim_Portali.Controllers
             _iManageImage = iManageImage;
         }
         [HttpGet]
-        [Authorize(Roles = "Teacher,Admin")]
+       
         [Route("List")]
         public List<HomeworkSubmissionDto> GetList()
         {
@@ -45,7 +45,7 @@ namespace Odev_Dagitim_Portali.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "Teacher,Admin")]
+     
         public HomeworkDto Get(int id)
         {
             var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
@@ -53,27 +53,41 @@ namespace Odev_Dagitim_Portali.Controllers
             var homeworkDto = _mapper.Map<HomeworkDto>(homework);
             return homeworkDto;
         }
-        
-
+        [Route("GetHomeworksByStudent")]
+        [HttpGet]
+        public List<HomeworkSubmissionDto> GetHomeworksByStudent(string id)
+        {
+            var submissions = _context.HomeworkSubmissions.Where(s => s.User_id == id).ToList();
+            var submissionDtos = _mapper.Map<List<HomeworkSubmissionDto>>(submissions);
+            return submissionDtos;
+        }
+        [Route("GetSubmissionsByHomework")]
+        [HttpGet]
+        public List<HomeworkSubmissionDto> GetSubmissionByHomework(int id)
+        {
+            var submissions = _context.HomeworkSubmissions.Where(s => s.Homework_id == id).ToList();
+            var submissionDtos = _mapper.Map<List<HomeworkSubmissionDto>>(submissions);
+            return submissionDtos;
+        }
         [HttpPost]
         [Route("UploadFile")]
         public async Task<ResultDto> UploadFile([FromForm] IFormFile file, [FromForm] HomeworkSubmissionDto dto)
         {
-            ResultDto result = new ResultDto(); 
+            ResultDto result = new ResultDto();
 
             try
             {
-                
-                var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                var userId = usernameClaim?.Value; 
 
-               
+                var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                var userId = usernameClaim?.Value;
+
+
                 var fileName = await _iManageImage.UploadFile(file);
 
-                
+
                 var homework_submission = new HomeworkSubmission
                 {
-                    
+
                     Homework_id = dto.Homework_id,
                     User_id = userId,
                     File_name = fileName,
@@ -81,11 +95,11 @@ namespace Odev_Dagitim_Portali.Controllers
                     Created = DateTime.Now
                 };
 
-               
-                _context.HomeworkSubmissions.Add(homework_submission);
-                await _context.SaveChangesAsync(); 
 
-               
+                _context.HomeworkSubmissions.Add(homework_submission);
+                await _context.SaveChangesAsync();
+
+
                 result.Status = true;
                 result.Message = "Ödev eklendi " + fileName;
             }
@@ -99,6 +113,8 @@ namespace Odev_Dagitim_Portali.Controllers
             // Sonucu döndürüyoruz
             return result;
         }
+
+
         [Authorize(Roles = "Teacher,Admin")]
         [HttpGet]
         [Route("DownloadFile")]
@@ -108,21 +124,19 @@ namespace Odev_Dagitim_Portali.Controllers
             return File(result.Item1, result.Item2, result.Item2);
         }
 
+
+
         [HttpPut]
+        [Route("Put")]
         public async Task<ResultDto> Put([FromForm] IFormFile file, [FromForm] HomeworkSubmissionDto dto)
         {
-            var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            var userId = usernameClaim?.Value;
+            //var usernameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            //var userId = usernameClaim?.Value;
 
             var fileName = await _iManageImage.UploadFile(file);
 
             var submission = _context.HomeworkSubmissions.Where(s => s.Submission_id == dto.Submission_id).SingleOrDefault();
-            if (submission.User_id != userId)
-            {
-                result.Message = "kullanıcılar uyuşmuyor!!!";
-                result.Status = false;
-                return result;
-            }
+           
             if (submission == null)
             {
                 result.Status = false;
@@ -139,9 +153,9 @@ namespace Odev_Dagitim_Portali.Controllers
             result.Message = "Ödev Düzenlendi";
             return result;
         }
-        [Authorize(Roles = "Teacher,Admin")]
+  
         [HttpDelete]
-        [Route("{id}")]
+        [Route("Delete/{id}")]
         public ResultDto Delete(int id)
         {
             var submission = _context.HomeworkSubmissions.Where(s => s.Submission_id == id).SingleOrDefault();

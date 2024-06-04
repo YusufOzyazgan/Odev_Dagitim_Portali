@@ -2,7 +2,7 @@
 // for details on configuring this project to bundle and minify static web assets.
 function showAdminPageIfAdmin(userRoles) {
     
-    if (userRoles.includes('admin')) {
+    if (userRoles.includes('Admin')) {
         $(".AdminPage").show(); 
     } else {
         $(".AdminPage").hide();

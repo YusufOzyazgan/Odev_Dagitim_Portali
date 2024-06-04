@@ -184,7 +184,24 @@ namespace Odev_Dagitim_Portali.Controllers
             return result;
 
         }
-
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(Roles = "Admin")]
+        public ResultDto Delete(string id)
+        {
+            var user = _context.Users.Where(s => s.Id == id).SingleOrDefault();
+            if (user == null)
+            {
+                result.Status = false;
+                result.Message = "Kişi Bulunamadı!";
+                return result;
+            }
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            result.Status = true;
+            result.Message = "Kişi Silindi";
+            return result;
+        }
         [HttpPost]
         //[Authorize(Roles = "Admin")]
         public async Task<ResultDto> GiveRole(AddRoleDto dto)

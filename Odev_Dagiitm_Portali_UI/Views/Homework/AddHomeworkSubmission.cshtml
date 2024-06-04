@@ -10,27 +10,28 @@
     <h1 class="mb-4">Ödev Teslimi Ekleme Sayfası</h1>
     <form id="homeworkSubmissionForm">
         
-        <div class="mb-3">
-            <label for="title" class="form-label">Dosya Adı:</label>
-            <input type="text" id="file_name" name="file_name" class="form-control">
-        </div>
+       
 
         <div class="mb-3">
             <label for="fileUpload" class="form-label">Dosya Yükle:</label>
             <input type="file" id="fileUpload" name="fileUpload" class="form-control">
         </div>
 
-        <button type="submit" id="submitBtn" class="btn btn-primary">GÖnder</button>
-        <div id="divResult"> </div>
+        <button type="submit" id="submitBtn" class="btn btn-primary">Gönder</button>
+        <br />
+        <br />
+
+        <div id="divResult"></div>
     </form>
 </div>
 
-@* @section Scripts {
+@section Scripts {
     <script>
         $(document).ready(function () {
+            console.log(userId)
             var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
             var HomeworkId = "@ViewBag.HomeworkId";
-            var token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
+            var token = localStorage.getItem("token");
 
             if (!token) {
                 window.location.href = ApiBaseUrl + 'Account/Login';
@@ -44,16 +45,14 @@
                 event.preventDefault();
 
                 var formData = new FormData();
-                var fileName = $('#file_name').val();
                 var file = $('#fileUpload')[0].files[0];
-                var userId = userId; 
-
-                formData.append('file_name', fileName);
-                formData.append('fileUpload', file);
-                formData.append('User_id', userId);
+                var fileName = $('#file_name').val();
+                var userId = userId;
+               
+                formData.append('file', file);
+                formData.append('File_name', fileName);
                 formData.append('Homework_id', HomeworkId);
-
-                console.log(formData);
+                //formData.append('User_id', userId);
 
                 $.ajax({
                     url: ApiBaseUrl + 'HomeworkSubmission/UploadFile',
@@ -62,8 +61,8 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        console.log("Ödev teslimi eklendi.");
-                        alert("Ödev Teslimi Eklendi!");
+                       
+                        
                         $("#divResult")
                             .show()
                             .removeClass()
@@ -71,16 +70,22 @@
                             .html(response.message)
                             .fadeOut(5000);
 
-                        // location.href = "/Homework/StudentHomeworks";
+                        location.href = "/Homework/StudentHomework";
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        // Hata durumunda yapılacak işlemler
-                        alert("Yükleme Hatası! " + textStatus + " " + errorThrown);
-                        console.log('Yükleme hatası:', textStatus, errorThrown);
+                        $("#divResult")
+                            .show()
+                            .removeClass()
+                            .addClass("alert alert-danger")
+                            .html("Ödev Eklenemedi.")
+                            .fadeOut(5000);
+                       
+                        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                            console.log('Hata mesajı:', jqXHR.responseJSON.message);
+                        }
                     }
                 });
             });
         });
     </script>
 }
- *@

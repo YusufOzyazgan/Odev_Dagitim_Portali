@@ -58,8 +58,8 @@ namespace Odev_Dagitim_Portali.Controllers
                                   ClassName = c.Class_name,
                                   ClassId = uc.ClassId,
                               };
-
-            return userClasses.ToList();
+            var listUserClasses = userClasses.ToList();
+            return listUserClasses;
         }
         [HttpPost]
         //[Authorize(Roles = "Teacher,Admin")]

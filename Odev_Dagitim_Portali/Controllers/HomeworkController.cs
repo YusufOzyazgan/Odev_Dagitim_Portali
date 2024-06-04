@@ -152,19 +152,40 @@ namespace Odev_Dagitim_Portali.Controllers
         [Authorize(Roles = "Teacher,Admin")]
         public ResultDto Delete(int id)
         {
-            var homework= _context.Homeworks.Where(s => s.Homework_id== id).SingleOrDefault();
-            if (homework == null)
+            ResultDto result = new ResultDto();
+
+            try
             {
-                result.Status = false;
-                result.Message = "Ödev Bulunamadı!";
-                return result;
+                // Ödevi bulun
+                var homework = _context.Homeworks.Where(s => s.Homework_id == id).SingleOrDefault();
+                if (homework == null)
+                {
+                    result.Status = false;
+                    result.Message = "Ödev Bulunamadı!";
+                    return result;
+                }
+
+                // Önce HomeworkSubmissions tablosundaki ilgili kayıtları sil
+                var submissions = _context.HomeworkSubmissions.Where(hs => hs.Homework_id == id);
+                _context.HomeworkSubmissions.RemoveRange(submissions);
+
+                // Daha sonra Homeworks tablosundaki kaydı sil
+                _context.Homeworks.Remove(homework);
+                _context.SaveChanges(); 
+
+                result.Status = true;
+                result.Message = "Ödev ve ilgili gönderimler başarıyla silindi.";
             }
-            _context.Homeworks.Remove(homework);
-            _context.SaveChanges();
-            result.Status = true;
-            result.Message = "Ödev Silindi";
+            catch (Exception ex)
+            {
+                // Hata durumunda uygun bir hata mesajı döndür
+                result.Status = false;
+                result.Message = "Bir hata oluştu: " + ex.Message;
+            }
+
             return result;
         }
+
 
 
 
