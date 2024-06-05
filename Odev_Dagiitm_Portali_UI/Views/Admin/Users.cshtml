@@ -80,17 +80,7 @@
                     // Kullanıcıya yetki verme işlemi
                     $('.authorize-btn').click(function () {
                         var userId = $(this).data('id');
-                        $.ajax({
-                            url: '/api/authorizeUser/' + userId,
-                            method: 'POST',
-                            success: function () {
-                                alert('Kullanıcıya yetki verildi.');
-                                location.reload(); // Sayfayı yenileyerek tabloyu güncelle
-                            },
-                            error: function (xhr, status, error) {
-                                console.error('Kullanıcıya yetki verilirken bir hata oluştu:', error);
-                            }
-                        });
+                        window.location.href = "/GiveRole/" + userId;
                     });
                 },
                 error: function (xhr, status, error) {

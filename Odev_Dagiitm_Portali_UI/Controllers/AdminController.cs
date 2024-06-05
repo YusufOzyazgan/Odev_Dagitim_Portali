@@ -38,5 +38,14 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
             return View();
 
         }
+        [Route("GiveRole/{userId}")]
+        public  IActionResult GiveRole(string userId)
+        {
+            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
+            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            ViewBag.userId = userId;
+
+            return View();
+        }
     }
 }

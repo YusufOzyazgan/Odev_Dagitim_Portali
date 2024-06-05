@@ -146,10 +146,11 @@
             function FormatDate(d) {
                 var date = new Date(d);
                 var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
-                var month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1); // Ay 0'dan başladığı için +1 ekliyoruz
+                var month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1); 
                 var year = date.getFullYear();
-                return day + "." + month + "." + year; // Biçimlendirilmiş tarihi döndür
-            }
+                return day + "." + month + "." + year; 
+            };
+
         });
     </script>
 }

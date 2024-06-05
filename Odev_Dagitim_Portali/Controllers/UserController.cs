@@ -203,7 +203,7 @@ namespace Odev_Dagitim_Portali.Controllers
             return result;
         }
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ResultDto> GiveRole(AddRoleDto dto)
         {
 
