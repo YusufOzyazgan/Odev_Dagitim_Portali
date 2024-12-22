@@ -30,12 +30,13 @@
                             <label for="classType">Sınıf Tipi</label>
                             <select id="classType" name="classType" class="form-control">
                                 <option value="">Bir sınıf seçin</option>
-                                <option value="2">Bilgisayar Programcılğı</option>  
-                                <option value="6">Edebiyat</option>
-                                <option value="7">Elektrik Elektronik Mühendisliği</option>
-                                <option value="8">Makine Mühendisliği</option>
-                                <option value="9">İngiliz Dili Ve Edebiyatı</option>
-                                
+                                <option value="1">Bilgisayar Programcılğı</option>  
+                                <option value="2">Elektrik Elektronik Mühendisliği</option>
+                                <option value="3">Yazılım Mühendisliği</option>
+                                <option value="4">Mimarlık</option>
+                                <option value="5">İngiliz Dili Ve Edebiyatı</option> 
+                                <option value="6">Psikoloji</option>
+
                             </select>
                         </div>
 
@@ -55,31 +56,19 @@
     <script>
         $(document).ready(function () {
 
-            var token = localStorage.getItem("token");
-            if (token == "" || token == null) {
+            
+            if (!token ) {
                 location.href = "/Home/Login";
                 return false;
             }
 
 
-
-
-
-
-
-
-
-
-            
-
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+           
 
             $("#btnAddUserClass").click(function () {
                 
                 var selectedclass = parseInt($("#classType").val(), 10);
-                console.log("Class İD = " + selectedclass);
-
-
+             
                 if ( selectedclass == "") {
                     $("#divResult")
                         .show()
@@ -99,7 +88,7 @@
                 
 
                 $.ajax({
-                    url: ApiBaseUrl + "Class/AddUserClass",
+                    url: apiUrl + "Class/AddUserClass",
                     method: "POST",
                     data: JSON.stringify(UserClass),
                     contentType: "application/json",
@@ -142,10 +131,10 @@
             $(document).on('click', '.btnDelete', function () {
                 var $listItem = $(this).closest('li');
                 var classId = $listItem.data('id');
-                console.log(ApiBaseUrl + 'Class/DeleteUserClass/' + classId)
+                
 
                 $.ajax({
-                    url: ApiBaseUrl + 'Class/DeleteUserClass/' + classId,
+                    url: apiUrl + 'Class/DeleteUserClass/' + classId,
                     type: 'DELETE',
                     success: function (result) {
                         $("#divResult").show();
@@ -159,9 +148,9 @@
                         $("#divResult").fadeOut(4000);
                     },
                     error: function (e) {
-                        if (e.status === 401) { // '==' yerine '===' kullanmak daha iyi olur
+                        if (e.status === 401) { 
                             localStorage.removeItem("token");
-                            location.href = "/Login";
+                            location.href = "/Home/Login";
                         }
                     }
                 });

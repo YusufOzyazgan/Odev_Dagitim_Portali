@@ -115,15 +115,38 @@ namespace Odev_Dagitim_Portali.Controllers
         }
 
 
+        //[HttpGet]
+        //[Route("DownloadFile")]
+        //public async Task<IActionResult> DownloadFile(string FileName)
+        //{
+        //    var result = await _iManageImage.DownloadFile(FileName);
+        //    return File(result.Item1, result.Item2, result.Item2);
+        //}
+
         [Authorize(Roles = "Teacher,Admin")]
         [HttpGet]
-        [Route("DownloadFile")]
-        public async Task<IActionResult> DownloadFile(string FileName)
+        [Route("DownloadFile/GetById/{id}")]
+        public async Task<IActionResult> DownloadFile(string id)
         {
-            var result = await _iManageImage.DownloadFile(FileName);
-            return File(result.Item1, result.Item2, result.Item2);
-        }
+            try
+            {
+                var filePath = Helper.Common.GetFilePath(id);
 
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound(new { message = "Dosya bulunamadı!" });
+                }
+
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                var contentType = "application/octet-stream";
+
+                return File(fileBytes, contentType, id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Bir hata oluştu!", error = ex.Message });
+            }
+        }
 
 
         [HttpPut]

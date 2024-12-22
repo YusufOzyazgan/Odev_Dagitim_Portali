@@ -9,6 +9,7 @@
     <h1 class="mb-4">Ödev Görüntüleme</h1>
     <hr />
     <form id="homeworkForm">
+        
         <div class="mb-3">
             <label for="class" class="form-label">Ödev Başlığı:</label>
             <input type="text" readonly="readonly" id="addHomeworkTeacherClasses" name="class" class="form-control">
@@ -44,7 +45,7 @@
             <input type="date" id="dueDate" readonly="readonly" name="dueDate" class="form-control">
         </div>
 
-        <button type="submit" id="btnUpdate" class="btn btn-primary"><a href="~/Homework/StudentHomework" class="text-white text-decoration-none">Tüm Ödevlerim</a></button>
+        <a href="#" id="homeworkSubmission" class=" btn btn-primary text-white text-decoration-none">Ödev Teslimi</a>
         <div id="divResult"> </div>
     </form>
 </div>
@@ -52,12 +53,13 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+
             var HomeworkId = "@ViewBag.HomeworkId";
-            var token = localStorage.getItem("token"); 
+          
+         
 
             if (!token) {
-                window.location.href = '~/Home/Login';
+                location.href = '/Home/Login';
             }
 
             $.ajaxSetup({
@@ -66,24 +68,26 @@
 
             
             $.ajax({
-                    url: ApiBaseUrl + 'Homeworks/GetById/'+HomeworkId,
+                    url: apiUrl + 'Homeworks/GetById/'+HomeworkId,
                     type: 'GET',
                     success: function (response) {
                     $.ajax({
-                        url: ApiBaseUrl + 'Lesson/GetById/'+response.lesson_id ,
+                        url: apiUrl + 'Lesson/GetById/'+response.lesson_id ,
                         type: 'GET',
                         success: function (data) {
                             var lessonId = data.lesson_id;
                             var lessonName = data.lesson_name;
                             var ClassId = data.class_id;
-                            console.log("get lesson "+lessonId,lessonName,ClassId)
+                            // console.log("get lesson "+lessonId,lessonName,ClassId)
                             $.ajax({
-                                url: ApiBaseUrl + 'Class/GetById/' + ClassId,
+                                url: apiUrl + 'Class/GetById/' + ClassId,
                                 type: 'GET',
                                 success: function (data2) {
                                     var class_name = data2.class_name;
-                               
-                                   
+
+                                    
+                                    //console.log(data2);
+
                                     $("#addHomeworkTeacherClasses").val(class_name);
                                     $("#subject").val(lessonName);
                                     $("#title").val(response.homework_title);
@@ -92,22 +96,12 @@
                                     $("#updateDate").val(FormatDate(response.updated));
                                     $("#dueDate").val(FormatDate(response.homework_deadline));
 
-                                    const data = {
-                                        Homework_id: HomeworkId,
-                                        Lesson_id: $('#subject').val(),
-                                        Homework_title: $('#title').val(),
-                                        Homework_content: $('#content').val(),
-                                        created: convertToDate($('#creatingDate').val()),
-                                        updated: convertToDate($('#updateDate').val()),
-                                        Homework_deadline: convertToDate($('#dueDate').val()),
-                                        User_id: userId
-                                    };
-                                    console.log(data);
+                                  
 
 
                                 },
                                 error: function (error) {
-                                    $('#divresult').append("Dersler yüklenirken bir hata oluştu.");
+                                    $('#divresult').append("Ödev yüklenirken bir hata oluştu.");
 
                                 }
                             });
@@ -130,8 +124,14 @@
 
 
                     }
+
+                    
              });
-           
+             $("#homeworkSubmission").click(function () {
+        
+             location.href = '/Homework/AddHomeworkSubmission/' + HomeworkId;
+              });
+            
             
 
 
@@ -141,7 +141,7 @@
                 var year = parseInt(parts[0], 10);
                 var month = parseInt(parts[1], 10) - 1; // Aylar 0-11 arası olduğundan 1 eksiltiyoruz
                 var day = parseInt(parts[2], 10);
-
+                cosole.log(new Date(year, mount, day));
                 return new Date(year, month, day);
             }
             function FormatDate(d) {

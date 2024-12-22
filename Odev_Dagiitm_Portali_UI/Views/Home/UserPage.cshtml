@@ -56,14 +56,14 @@
                 return;
             }
 
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+    
             GetUserInfo();
 
-            console.log(ApiBaseUrl + "User/GetById/" + userId);
+            
 
             function GetUserInfo() {
                 $.ajax({
-                    url: ApiBaseUrl + "User/GetById/" + userId,
+                    url: apiUrl + "User/GetById/" + userId,
                     method: "Get",
                     contentType: "application/json",
                     headers: {
@@ -78,12 +78,7 @@
                         $("#txtPhone").val(data.phoneNumber);
 
                     },
-                    error: function (e) {
-                        if (e.status === 401) {
-                            localStorage.removeItem("token");
-                            location.href = "/Login";
-                        }
-                    }
+                   
                 });
 
             }
@@ -105,7 +100,7 @@
                 console.log(register);
 
                 $.ajax({
-                    url: ApiBaseUrl + "User/Update",
+                    url: apiUrl + "User/Update",
                     type: "Put",
                     contentType: "application/json",
                     headers: {
@@ -113,7 +108,7 @@
                     },
                     data: JSON.stringify(register),
                     success: function (data) {
-                        console.log(data);
+                        
                         if (data.status) {
                             $("#divResult")
                                 .show()

@@ -35,15 +35,7 @@
                 <textarea id="content" name="content" class="form-control" rows="4"></textarea>
             </div>
 
-            @* <div class="mb-3">
-                <label for="startDate" class="form-label">Eklenme Tarihi:</label>
-                <input type="date" id="startDate" name="startDate" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label for="endDate" class="form-label">Çıkartılma Tarihi:</label>
-                <input type="date" id="endDate" name="endDate" class="form-control">
-            </div> *@
+            
 
             <div class="mb-3">
                 <label for="dueDate" class="form-label">Son Teslim Tarihi:</label>
@@ -58,11 +50,18 @@
 {
     <script>
         $(document).ready(function () {
-                var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-                var token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
+               
 
-                if (!token) {
-                    window.location.href = "~/Home/Login";
+                if (!token || (!userRoles.includes("Admin") && !userRoles.includes("Teacher"))) {
+
+                   
+                    $("#divResult")
+                        .show()
+                        .removeClass()
+                        .addClass("alert alert-success")
+                        .html("Ödev ekleme yetkisine sahip değilsiniz!")
+                        .fadeOut(5000);
+                    location.href = "/Home/Login";
                 }
 
                 $.ajaxSetup({
@@ -74,16 +73,16 @@
                    
 
                     $.ajax({
-                        url: ApiBaseUrl + 'Lesson/GetLessonByClassId',
+                        url: apiUrl + 'Lesson/GetLessonByClassId',
                         type: 'GET',
                         data: { id: selectedClass },  
                         success: function (response) {
                             var subjectSelect = $('#subject');
                             subjectSelect.empty();
-                            console.log(response);
+                            
                             response.forEach(function (subject) {
                                 subjectSelect.append('<option value="' + subject.lesson_id + '">' + subject.lesson_name + '</option>');
-                                console.log({ subject: $('#subject').val(), title: $('#title').val(), content: $('#content').val(), dueDate: $('#dueDate').val() });
+                               
                             
                             });
                         },
@@ -98,20 +97,18 @@
             
             $('#homeworkForm').on('submit', function (e) {
                 e.preventDefault();
-                console.log(userId)
+               
                 const data = {
                     
                     Lesson_id: $('#subject').val(),
                     Homework_title: $('#title').val(),
                     Homework_content: $('#content').val(),
-                    // startDate: $('#startDate').val(),
-                    // endDate: $('#endDate').val(),
                     Homework_deadline: $('#dueDate').val(),
                     User_id : userId
                 };
 
                 $.ajax({
-                    url: ApiBaseUrl+'Homeworks/Add',  
+                    url: apiUrl+'Homeworks/Add',  
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),

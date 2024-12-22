@@ -35,8 +35,8 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var token = localStorage.getItem("token"); 
+         
+           
 
            
             function FormatDate(d) {
@@ -48,7 +48,7 @@
             }
 
             if (!token) {
-                window.location.href = '~/Home/Login'; 
+             location.href = '/Home/Login'; 
             }
 
             $.ajaxSetup({
@@ -56,7 +56,7 @@
             });
 
             $.ajax({
-                url: ApiBaseUrl + "Homeworks/GetHomeworksByStudent",
+                url: apiUrl + "Homeworks/GetHomeworksByStudent",
                 data: { id: userId },
                 type: "GET",
                 success: function (data) {
@@ -66,7 +66,7 @@
                         var lessonId = item.lesson_id;
 
                         $.ajax({
-                            url: ApiBaseUrl + "Lesson/GetById/" + lessonId,
+                            url: apiUrl + "Lesson/GetById/" + lessonId,
                             data: { id: lessonId },
                             type: "GET",
                             success: function (lessonData) {
@@ -76,7 +76,7 @@
 
                                 // AJAX isteği yaparak sınıfın adını al
                                 $.ajax({
-                                    url: ApiBaseUrl + "Class/GetById/" + classId,
+                                    url: apiUrl + "Class/GetById/" + classId,
                                     data: { id: classId },
                                     type: "GET",
                                     success: function (classNameData) {
@@ -119,7 +119,7 @@
 
                 if (confirm('Bu ödevi silmek istediğinizden emin misiniz?')) {
                     $.ajax({
-                        url: ApiBaseUrl + 'Homeworks/Delete/' + homeworkId,
+                        url: apiUrl + 'Homeworks/Delete/' + homeworkId,
                         type: 'DELETE',
                         success: function (response) {
                             // Silme başarılıysa satırı kaldır

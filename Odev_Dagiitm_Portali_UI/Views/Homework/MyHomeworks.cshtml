@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "MyHomeworks";
 }
 <style>
@@ -7,15 +6,15 @@
         text-decoration: none; /* Alt çizgiyi kaldırır */
     }
 </style>
-    <h3>Ödevler</h3>
-
+<h3>Ödevler</h3>
+<hr>
 <div class="col-md-11">
     <div id="progress"></div>
 
     <table class="table table-striped " id="tbExams">
         <thead class="bg-dark">
             <tr>
-                
+
                 <th class="text-white">Sınıf İsmi</th>
                 <th class="text-white">Ders İsmi</th>
                 <th class="text-white">Ödev Başlığı</th>
@@ -32,20 +31,19 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
 
-            // Tarih biçimini düzenlemek için bir fonksiyon
+
+
             function FormatDate(d) {
                 var date = new Date(d);
                 var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
                 var month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1); // Ay 0'dan başladığı için +1 ekliyoruz
                 var year = date.getFullYear();
-                return day + "." + month + "." + year; // Biçimlendirilmiş tarihi döndür
+                return day + "." + month + "." + year;
             }
 
             if (!token) {
-                window.location.href = '~/Home/Login'; // Token yoksa giriş sayfasına yönlendir
+                location.href = '/Home/Login';
             }
 
             $.ajaxSetup({
@@ -53,17 +51,25 @@
             });
 
             $.ajax({
-                url: ApiBaseUrl + "Homeworks/GetHomeworksByTeacher",
+                url: apiUrl + "Homeworks/GetHomeworksByTeacher",
                 data: { id: userId },
                 type: "GET",
                 success: function (data) {
                     var i = 0;
-                    console.log(data);
+
+                    if (!data) {
+                        $('#tbExams tbody').append(
+                            '<tr>' +
+                            '<td colspan="2">' + '<h4>' + 'Ödeviniz Yok' + '</h4>' + '</td>' +
+                            '</tr>'
+                        );
+
+                    }
                     $.each(data, function (index, item) {
                         var lessonId = item.lesson_id;
 
                         $.ajax({
-                            url: ApiBaseUrl + "Lesson/GetById/" + lessonId,
+                            url: apiUrl + "Lesson/GetById/" + lessonId,
                             data: { id: lessonId },
                             type: "GET",
                             success: function (lessonData) {
@@ -71,9 +77,9 @@
                                 console.log(lessonName);
                                 var classId = lessonData.class_id;
 
-                                // AJAX isteği yaparak sınıfın adını al
+
                                 $.ajax({
-                                    url: ApiBaseUrl + "Class/GetById/" + classId,
+                                    url: apiUrl + "Class/GetById/" + classId,
                                     data: { id: classId },
                                     type: "GET",
                                     success: function (classNameData) {
@@ -116,7 +122,7 @@
 
                 if (confirm('Bu ödevi silmek istediğinizden emin misiniz?')) {
                     $.ajax({
-                        url: ApiBaseUrl + 'Homeworks/Delete/' + homeworkId,
+                        url: apiUrl + 'Homeworks/Delete/' + homeworkId,
                         type: 'DELETE',
                         success: function (response) {
                             // Silme başarılıysa satırı kaldır

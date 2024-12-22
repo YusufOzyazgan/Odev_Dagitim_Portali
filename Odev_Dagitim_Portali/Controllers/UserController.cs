@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Odev_Dagitim_Portali.Dtos;
 using Odev_Dagitim_Portali.Models;
@@ -44,7 +45,7 @@ namespace Odev_Dagitim_Portali.Controllers
             var userDtos = _mapper.Map<List<UserDto>>(users);
             return userDtos;
         }
-        [Authorize(Roles = "Admin,Teacher,Student")]
+        [Authorize]
         [HttpGet]
         [Route("{id}")] 
         public UserDto GetById(string id)   
@@ -53,6 +54,35 @@ namespace Odev_Dagitim_Portali.Controllers
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }
+
+        //[Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Count()
+        {
+
+            string adminId   =   "07c1301d-0e3f-4314-b5d4-7af6c64ac9d8";
+            string teacherId = "c3389fe4-aea9-49e3-b805-6bbae8ee10d8";
+            string studentId = "cdc0a31c-5b8f-4252-9a46-bd4240314c77";
+
+            var adminCount = await _context.UserRoles.Where(x => x.RoleId == adminId).CountAsync();
+            var teacherCount = await _context.UserRoles.Where(x => x.RoleId == teacherId).CountAsync();
+            var studentCount = await _context.UserRoles.Where(x => x.RoleId == studentId).CountAsync();
+            var homeworkCount = await _context.Homeworks.CountAsync();
+            var submissionCount = await _context.HomeworkSubmissions.CountAsync();
+            
+
+
+            return Ok(new
+            {
+                AdminCount = adminCount,
+                TeacherCount = teacherCount,
+                StudentCount = studentCount,
+                HomeworkCount = homeworkCount,
+                SubmissionCount = submissionCount
+            });
+        }
+
+
         [Authorize]
         [HttpPut]
         public async Task<ResultDto> Update(UserDto dto)
@@ -78,6 +108,13 @@ namespace Odev_Dagitim_Portali.Controllers
         [HttpPost]
         public async Task<ResultDto> RegisterStudent(RegisterDto dto)
         {
+            if (!dto.Email.Contains("@ogr.akdeniz.edu.tr"))
+            {
+
+                result.Status = false;
+                result.Message = "Hatalı e-mail. Resmi e mail adresinizi kullanmanız gerkli!";
+                return result;
+            }
             var identityResult = await _userManager.CreateAsync(new() { UserName = dto.UserName, Email = dto.Email, Full_name = dto.Full_name, PhoneNumber = dto.PhoneNumber }, dto.Password);
 
             if (!identityResult.Succeeded)
@@ -108,7 +145,7 @@ namespace Odev_Dagitim_Portali.Controllers
         [HttpPost]
         public async Task<ResultDto> RegisterTeacher(RegisterDto dto)
         {
-            if (!dto.Email.Contains("@akdeniz.edu.tr"))
+            if (!dto.Email.Contains("@akdeniz.edu.tr")) 
             {
 
                 result.Status = false;

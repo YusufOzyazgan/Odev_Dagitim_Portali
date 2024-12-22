@@ -1,11 +1,11 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Login";
 }
 
 <div class="row mt-5">
     <div class="col-md-4"></div>
     <div class="col-md-4">
+        <div id="divResult"></div>
         <div class="card mb-2">
             <div class="card-header"><h3>Oturum Aç</h3></div>
             <div class="card-body">
@@ -30,7 +30,7 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+          
 
             $("#btnLogin").click(function () {
                 var userName = $("#txtUserName").val();
@@ -40,15 +40,23 @@
                 loginData.Password = password;
 
                 $.ajax({
-                    url: ApiBaseUrl + "User/SignIn",
+                    url: apiUrl + "User/SignIn",
                     method: "POST",
                     data: JSON.stringify(loginData),
                     contentType: "application/json",
                     success: function (data) {
                         if (data.status) {
-                            console.log(ApiBaseUrl +"User/SignIn")
+                            console.log(apiUrl + "User/SignIn");
                             localStorage.setItem("token", data.message);
-                            location.href = "/Home/Index";
+                            var payload1 = parseJwt(data.message);
+                            var userRoles1 = payload1["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+                            if (userRoles1.includes("Admin")) {
+                                location.href = "/Admin/Index";
+
+                            }
+                            else {
+                                location.href = "/Home/Index";
+                            }
                         } else {
                             $("#result")
                                 .show()

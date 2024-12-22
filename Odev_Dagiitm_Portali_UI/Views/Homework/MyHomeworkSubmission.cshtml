@@ -28,14 +28,12 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var token = localStorage.getItem("token");
-
+           
        
             
 
             if (!token) {
-                window.location.href = '~/Home/Login';
+                location.href = '/Home/Login';
             }
 
             $.ajaxSetup({
@@ -43,7 +41,7 @@
             });
 
             $.ajax({
-                url: ApiBaseUrl + "HomeworkSubmission/GetHomeworksByStudent",
+                url: apiUrl + "HomeworkSubmission/GetHomeworksByStudent",
                 data: { id: userId },
                 type: "GET",
                 success: function (data) {
@@ -54,13 +52,13 @@
                         var created = item.created;
                        
                         $.ajax({
-                            url: ApiBaseUrl + "Homeworks/GetById/" + homeworkId,
+                            url: apiUrl + "Homeworks/GetById/" + homeworkId,
                             data: { id: homeworkId },
                             type: "GET",
                             success: function (homeworkData) {
                                 var lessonId = homeworkData.lesson_id;
                                 $.ajax({
-                                url: ApiBaseUrl + "Lesson/GetById/" + lessonId,
+                                url: apiUrl + "Lesson/GetById/" + lessonId,
                                 data: { id: lessonId },
                                 type: "GET",
                                     success: function (lessonData) {
@@ -101,7 +99,7 @@
 
                 if (confirm('Bu ödev teslimini silmek istediğinizden emin misiniz?')) {
                     $.ajax({
-                        url: ApiBaseUrl + 'HomeworkSubmission/Delete/' + submissionId,
+                        url: apiUrl + 'HomeworkSubmission/Delete/' + submissionId,
                         type: 'DELETE',
                         success: function (response) {
                             // Silme başarılıysa satırı kaldır

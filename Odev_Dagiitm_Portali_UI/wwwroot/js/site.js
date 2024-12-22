@@ -3,7 +3,8 @@
 function showAdminPageIfAdmin(userRoles) {
     
     if (userRoles.includes('Admin')) {
-        $(".AdminPage").show(); 
+        $(".AdminPage").show();
+     
     } else {
         $(".AdminPage").hide();
     }
@@ -26,9 +27,9 @@ function showStudentPageIfStudent(userRoles) {
 }
 function showUserClass() {
    
-    console.log(apiUrl + 'api/Class/GetUserClasses' + userId)
+    
     $.ajax({
-        url: apiUrl + 'api/Class/GetUserClasses/' + userId,
+        url: apiUrl + 'Class/GetUserClasses/' + userId,
         type: 'GET',
         data: { userId: userId },
         headers: {
@@ -36,7 +37,7 @@ function showUserClass() {
         },
         success: function (classes) {
             var userClasses = classes; // Veriyi global değişkene atayın
-            console.log(userId)
+           
             
             var $registeredClassesList = $('#registeredClassesList');
             var $registeredClassesList2 = $('#registeredClassesList2');
@@ -50,7 +51,7 @@ function showUserClass() {
                 $registeredClassesList2.append('<li class="list-group-item mb-1 text-center" data-id="' + classes2.id + '"><b>' + classes2.className + '&nbsp;&nbsp;</b></li>');
             });
             
-            console.log(userClasses)
+           
             userClasses.forEach(function (userClass) {
                 classSelect.append('<option value="' + userClass.classId + '">' + userClass.className + '</option>');
             });
@@ -62,7 +63,7 @@ function showUserClass() {
 }
 var token = localStorage.getItem("token")
 var userRoles = [];
-var apiUrl = "https://localhost:7106/";
+var apiUrl = "https://localhost:7106/api/";
 var userId = ";"
 
 if (token == null) {
@@ -79,6 +80,10 @@ if (token == null) {
     userRoles = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     
     userId = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+    //console.log(userRoles);
+    console.log(token);
+
     $("#UserName").html(username);
     showAdminPageIfAdmin(userRoles);
     showStudentPageIfStudent(userRoles);

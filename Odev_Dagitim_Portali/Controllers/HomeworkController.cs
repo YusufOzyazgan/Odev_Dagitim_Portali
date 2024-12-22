@@ -111,7 +111,7 @@ namespace Odev_Dagitim_Portali.Controllers
                
 
                 _context.Homeworks.Add(homework);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 result.Status = true;
                 result.Message = "Ödev Eklendi.";
             }

@@ -15,35 +15,33 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         public IActionResult Index()
         {
+            
+
             return View();
         }
         public IActionResult Users()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            
             return View();
 
         }
         public IActionResult Homeworks()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            
             return View();
 
         }
         public IActionResult HomeworkSubmissions()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+           
             return View();
 
         }
         [Route("GiveRole/{userId}")]
         public  IActionResult GiveRole(string userId)
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
-            ViewBag.userId = userId;
+            
+            ViewBag.userId = userId;    
 
             return View();
         }

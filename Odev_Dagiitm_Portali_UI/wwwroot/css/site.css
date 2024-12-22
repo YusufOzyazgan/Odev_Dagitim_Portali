@@ -20,3 +20,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+#title {
+    font-size: 3rem; /* Büyük yazý */
+    font-weight: 800; /* Kalýn yazý */
+    text-transform: uppercase; /* Harfleri büyük yap */
+    background: linear-gradient(90deg, #007BFF, #001F54); /* Mavi-lacivert geçiþ */
+    -webkit-background-clip: text; /* Arka planý sadece yazýya uygula */
+    -webkit-text-fill-color: transparent; /* Yazýyý þeffaf yap */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2); /* Hafif gölge efekti */
+    text-align: center; /* Ortala */
+    margin: 0; /* Varsayýlan boþluklarý kaldýr */
+    padding: 20px 0; /* Üst-alt boþluk */
+}
+   

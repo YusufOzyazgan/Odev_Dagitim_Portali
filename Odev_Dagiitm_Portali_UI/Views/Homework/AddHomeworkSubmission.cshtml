@@ -28,13 +28,12 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            console.log(userId)
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+          
             var HomeworkId = "@ViewBag.HomeworkId";
-            var token = localStorage.getItem("token");
+    
 
             if (!token) {
-                window.location.href = ApiBaseUrl + 'Account/Login';
+                location.href = '/Home/Login';
             }
 
             $.ajaxSetup({
@@ -55,7 +54,7 @@
                 //formData.append('User_id', userId);
 
                 $.ajax({
-                    url: ApiBaseUrl + 'HomeworkSubmission/UploadFile',
+                    url: apiUrl + 'HomeworkSubmission/UploadFile',
                     type: 'POST',
                     data: formData,
                     processData: false,

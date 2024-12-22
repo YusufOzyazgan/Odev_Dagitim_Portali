@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "HomeworkSubmission";
 }
 
@@ -18,7 +17,7 @@
                 <th class="text-white">isim Soyisim</th>
                 <th class="text-white">Ödev Gönderilme Tarihi</th>
                 <th class="text-white">İndir</th>
-                
+
 
             </tr>
         </thead>
@@ -29,14 +28,9 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var token = localStorage.getItem("token"); // Token'ı localStorage'dan alın
 
-            // Tarih biçimini düzenlemek için bir fonksiyon
-           
-
-            if (!token) {
-                window.location.href = '~/Home/Login'; // Token yoksa giriş sayfasına yönlendir
+            if (!token || (!userRoles.includes("Teacher") && !userRoles.includes("Admin"))) {
+                location.href = '/Home/Login';
             }
 
             $.ajaxSetup({
@@ -44,17 +38,17 @@
             });
 
             $.ajax({
-                url: ApiBaseUrl + "Homeworks/GetHomeworksByTeacher",
+                url: apiUrl + "Homeworks/GetHomeworksByTeacher",
                 data: { id: userId },
                 type: "GET",
                 success: function (data) {
                     var i = 0;
-                    
+
                     $.each(data, function (index, item) {
                         var lessonId = item.lesson_id;
                         var homeworkId = item.homework_id;
                         $.ajax({
-                            url: ApiBaseUrl + "HomeworkSubmission/GetSubmissionsByHomework/",
+                            url: apiUrl + "HomeworkSubmission/GetSubmissionsByHomework/",
                             data: { id: homeworkId },
                             type: "GET",
                             success: function (submissionData) {
@@ -62,37 +56,40 @@
                                     var UserId = i.user_id;
 
                                     $.ajax({
-                                        url: ApiBaseUrl + "Lesson/GetById/" + lessonId,
+                                        url: apiUrl + "Lesson/GetById/" + lessonId,
                                         data: { id: lessonId },
                                         type: "GET",
                                         success: function (lessonData) {
-                                            console.log(i.file_name)
-                                            var lessonName = lessonData.lesson_name; 
-                                           
+
+                                            var lessonName = lessonData.lesson_name;
+
                                             var classId = lessonData.class_id;
 
                                             $.ajax({
-                                                url: ApiBaseUrl + "Class/GetById/" + classId,
+                                                url: apiUrl + "Class/GetById/" + classId,
                                                 data: { id: classId },
                                                 type: "GET",
                                                 success: function (classNameData) {
                                                     var className = classNameData.class_name;
                                                     $.ajax({
-                                                        url: ApiBaseUrl + "User/GetById/" + UserId,
+                                                        url: apiUrl + "User/GetById/" + UserId,
                                                         data: { id: UserId },
                                                         type: "GET",
                                                         success: function (UserData) {
                                                             console.log(UserData)
                                                             $('#tbSubmissions tbody').append(
-                                                        '<tr>' +
-                                                        '<td>' + className + '</td>' +
-                                                        '<td>' + lessonName + '</td>' +
-                                                        '<td>' + item.homework_title + '</td>' +
-                                                        '<td>' + UserData.full_name + '</td>' +
-                                                        '<td>' + FormatDate(i.updated) + '</td>' +
-                                                        '<td><button class="btn btn-primary download-btn" data-submission-id=' + i.file_name + '>İndir</button></td>' +
-                                                        '</tr>'
-                                                    );
+                                                                '<tr>' +
+                                                                '<td>' + className + '</td>' +
+                                                                '<td>' + lessonName + '</td>' +
+                                                                '<td>' + item.homework_title + '</td>' +
+                                                                '<td>' + UserData.full_name + '</td>' +
+                                                                '<td>' + FormatDate(i.updated) + '</td>' +
+                                                                '<td>' +
+                                                                '<button class="btn btn-primary download-btn" data-file-name="' + i.file_name + '">İndir</button>' +
+                                                                '</td>' +
+                                                                '</tr>'
+                                                            );
+
 
 
                                                         },
@@ -100,8 +97,8 @@
                                                             alert("Sınıf adı alınamadı!");
                                                         }
                                                     });
-                                                    
-                                                    
+
+
                                                 },
                                                 error: function () {
                                                     alert("Sınıf adı alınamadı!");
@@ -113,7 +110,7 @@
                                         }
                                     });
                                 });
-                               
+
                             },
                             error: function () {
                                 alert("Ders adı alınamadı!");
@@ -123,10 +120,45 @@
 
                 },
                 error: function () {
-                    
+
                     alert("Veri alınamadı!");
                 }
             });
+
+            // const downloadButtons = document.querySelectorAll(".download-btn");
+
+            $('#tbSubmissions').on('click', '.download-btn', function () {
+                // Butonun data-file-name özelliğinden dosya adını al
+                const fileName = $(this).data("file-name");
+                console.log("FileName ",fileName);
+                if (!fileName) {
+                    alert("Dosya adı bulunamadı!");
+
+                    return;
+                }
+
+                // AJAX GET isteği
+                $.ajax({
+                    url: apiUrl + "HomeworkSubmission/DownloadFile/GetById/" + fileName, // URL oluşturuluyor
+                    type: "GET",
+                    success: function (response) {
+                        // Gelen yanıtı blob olarak işle ve indir
+                        const blob = new Blob([response], { type: "application/octet-stream" });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = fileName; // İndirme sırasında dosya adı
+                        a.click();
+                        window.URL.revokeObjectURL(url); // Belleği temizle
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Dosya indirilemedi:", error);
+                        alert("Dosya indirilemedi. Lütfen tekrar deneyin.");
+                    }
+                });
+            });
+
+
 
 
             $('#tbSubmissions').on('click', '.delete-btn', function () {
@@ -135,10 +167,10 @@
 
                 if (confirm('Bu ödev teslimini silmek istediğinizden emin misiniz?')) {
                     $.ajax({
-                        url: ApiBaseUrl + 'HomeworkSubmission/Delete/' + submissionId,
+                        url: apiUrl + 'HomeworkSubmission/Delete/' + submissionId,
                         type: 'DELETE',
                         success: function (response) {
-                            // Silme başarılıysa satırı kaldır
+
                             row.remove();
                             alert('Ödev başarıyla silindi.');
                         },
@@ -148,7 +180,7 @@
                     });
                 }
             });
-             function FormatDate(d) {
+            function FormatDate(d) {
                 var date = new Date(d);
                 var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
                 var month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1); // Ay 0'dan başladığı için +1 ekliyoruz

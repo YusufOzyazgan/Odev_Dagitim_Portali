@@ -27,11 +27,11 @@
 {
     <script>
         $(document).ready(function () {
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
-            var token = localStorage.getItem("token");
+           
 
-            if (!token) {
-                window.location.href = '~/Home/Login';
+
+            if (!token || !userRoles.includes("Admin")) {
+                location.href = '/Home/Login';
             }
 
             $.ajaxSetup({
@@ -41,7 +41,7 @@
             
             
             $.ajax({
-                url: ApiBaseUrl + 'User/List',
+                url: apiUrl + 'User/List',
                 method: 'GET',
                 success: function (data) {
                     var userTableBody = $('#userTableBody');
@@ -65,7 +65,7 @@
                     $('.delete-btn').click(function () {
                         var userId = $(this).data('id');
                         $.ajax({
-                            url: ApiBaseUrl + 'User/Delete/' + userId,
+                            url: apiUrl + 'User/Delete/' + userId,
                             method: 'DELETE',
                             success: function () {
                                 alert('Kullanıcı başarıyla silindi.');
@@ -80,7 +80,7 @@
                     // Kullanıcıya yetki verme işlemi
                     $('.authorize-btn').click(function () {
                         var userId = $(this).data('id');
-                        window.location.href = "/GiveRole/" + userId;
+                       location.href = "/GiveRole/" + userId;
                     });
                 },
                 error: function (xhr, status, error) {

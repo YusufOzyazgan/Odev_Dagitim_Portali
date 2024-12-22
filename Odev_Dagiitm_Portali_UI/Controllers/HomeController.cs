@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Odev_Dagiitm_Portali_UI.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Odev_Dagiitm_Portali_UI.Controllers
 {
@@ -16,6 +17,8 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         public IActionResult Index()
         {
+            
+
             return View();
         }
 
@@ -23,8 +26,7 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
        
         public IActionResult Login()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+            
             return View();
         }
             
@@ -38,8 +40,7 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         public IActionResult RegisterTeacher()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+          
             return View();
             
 
@@ -47,8 +48,7 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         public IActionResult RegisterStudent()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+           
             return View();
 
 
@@ -57,8 +57,7 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         public IActionResult addUserClass()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+          
             return View();
         }
 
@@ -69,8 +68,7 @@ namespace Odev_Dagiitm_Portali_UI.Controllers
 
         public IActionResult UserPage()
         {
-            string ApiBaseUrl = _configuration["ApiBaseUrl"]!;
-            ViewBag.ApiBaseUrl = ApiBaseUrl;
+         
             return View();
 
         }

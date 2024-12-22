@@ -28,12 +28,12 @@
     <script>
         $(document).ready(function () {
             console.log(userId)
-            var ApiBaseUrl = "@ViewBag.ApiBaseUrl";
+           
             var HomeworkSubmissionId = "@ViewBag.HomeworkSubmissionId";
-            var token = localStorage.getItem("token");
+         
 
             if (!token) {
-                window.location.href = ApiBaseUrl + 'Account/Login';
+               location.href = 'Home/Login';
             }
 
             $.ajaxSetup({
@@ -54,7 +54,7 @@
                 formData.append('Submisison_id', HomeworkSubmissionId);
 
                 $.ajax({
-                    url: ApiBaseUrl + 'HomeworkSubmission/Put',
+                    url: apiUrl + 'HomeworkSubmission/Put',
                     type: 'PUT',
                     data: formData,
                     processData: false,
